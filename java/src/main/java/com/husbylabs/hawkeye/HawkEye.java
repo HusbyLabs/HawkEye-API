@@ -9,6 +9,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * The HawkEye client for writing and reading data
  *
@@ -20,6 +23,9 @@ public final class HawkEye {
     private final Provider provider;
     @Getter
     private final boolean server;
+
+    private Map<Integer, HawkEyeEntry> fields = new HashMap<>();
+    private Map<String, Integer> fieldNames = new HashMap<>();
 
     private State state = State.HANDSHAKE;
 
@@ -35,6 +41,14 @@ public final class HawkEye {
                     .build();
             provider.send(PacketUtil.identify(ClientHandshake.class, handshake.toByteArray()));
         }
+    }
+
+    public void setFieldInfo(Map<String, Integer> info) {
+
+    }
+
+    public void setFieldsInfo(Map<String, Integer>... info) {
+
     }
 
     private void handleMessage(byte[] data) {

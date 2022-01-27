@@ -126,15 +126,15 @@ public final class UpdateFieldOuterClass {
 
         public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-            return com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.internal_static_UpdateField_descriptor;
+            return UpdateFieldOuterClass.internal_static_UpdateField_descriptor;
         }
 
         @java.lang.Override
         protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-            return com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.internal_static_UpdateField_fieldAccessorTable
+            return UpdateFieldOuterClass.internal_static_UpdateField_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField.class, com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField.Builder.class);
+                            UpdateFieldOuterClass.UpdateField.class, UpdateFieldOuterClass.UpdateField.Builder.class);
         }
 
         public static final int NAME_FIELD_NUMBER = 1;
@@ -245,10 +245,10 @@ public final class UpdateFieldOuterClass {
             if (obj == this) {
                 return true;
             }
-            if (!(obj instanceof com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField)) {
+            if (!(obj instanceof UpdateFieldOuterClass.UpdateField)) {
                 return super.equals(obj);
             }
-            com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField other = (com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField) obj;
+            UpdateFieldOuterClass.UpdateField other = (UpdateFieldOuterClass.UpdateField) obj;
 
             if (!getName()
                     .equals(other.getName())) {
@@ -280,51 +280,51 @@ public final class UpdateFieldOuterClass {
             return hash;
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField parseFrom(
+        public static UpdateFieldOuterClass.UpdateField parseFrom(
                 java.nio.ByteBuffer data)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data);
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField parseFrom(
+        public static UpdateFieldOuterClass.UpdateField parseFrom(
                 java.nio.ByteBuffer data,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data, extensionRegistry);
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField parseFrom(
+        public static UpdateFieldOuterClass.UpdateField parseFrom(
                 com.google.protobuf.ByteString data)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data);
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField parseFrom(
+        public static UpdateFieldOuterClass.UpdateField parseFrom(
                 com.google.protobuf.ByteString data,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data, extensionRegistry);
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField parseFrom(byte[] data)
+        public static UpdateFieldOuterClass.UpdateField parseFrom(byte[] data)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data);
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField parseFrom(
+        public static UpdateFieldOuterClass.UpdateField parseFrom(
                 byte[] data,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data, extensionRegistry);
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField parseFrom(java.io.InputStream input)
+        public static UpdateFieldOuterClass.UpdateField parseFrom(java.io.InputStream input)
                 throws java.io.IOException {
             return com.google.protobuf.GeneratedMessageV3
                     .parseWithIOException(PARSER, input);
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField parseFrom(
+        public static UpdateFieldOuterClass.UpdateField parseFrom(
                 java.io.InputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
@@ -332,13 +332,13 @@ public final class UpdateFieldOuterClass {
                     .parseWithIOException(PARSER, input, extensionRegistry);
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField parseDelimitedFrom(java.io.InputStream input)
+        public static UpdateFieldOuterClass.UpdateField parseDelimitedFrom(java.io.InputStream input)
                 throws java.io.IOException {
             return com.google.protobuf.GeneratedMessageV3
                     .parseDelimitedWithIOException(PARSER, input);
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField parseDelimitedFrom(
+        public static UpdateFieldOuterClass.UpdateField parseDelimitedFrom(
                 java.io.InputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
@@ -346,14 +346,14 @@ public final class UpdateFieldOuterClass {
                     .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField parseFrom(
+        public static UpdateFieldOuterClass.UpdateField parseFrom(
                 com.google.protobuf.CodedInputStream input)
                 throws java.io.IOException {
             return com.google.protobuf.GeneratedMessageV3
                     .parseWithIOException(PARSER, input);
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField parseFrom(
+        public static UpdateFieldOuterClass.UpdateField parseFrom(
                 com.google.protobuf.CodedInputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
@@ -370,7 +370,7 @@ public final class UpdateFieldOuterClass {
             return DEFAULT_INSTANCE.toBuilder();
         }
 
-        public static Builder newBuilder(com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField prototype) {
+        public static Builder newBuilder(UpdateFieldOuterClass.UpdateField prototype) {
             return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
         }
 
@@ -393,21 +393,21 @@ public final class UpdateFieldOuterClass {
         public static final class Builder extends
                 com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
                 // @@protoc_insertion_point(builder_implements:UpdateField)
-                com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateFieldOrBuilder {
+                UpdateFieldOuterClass.UpdateFieldOrBuilder {
             public static final com.google.protobuf.Descriptors.Descriptor
             getDescriptor() {
-                return com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.internal_static_UpdateField_descriptor;
+                return UpdateFieldOuterClass.internal_static_UpdateField_descriptor;
             }
 
             @java.lang.Override
             protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
             internalGetFieldAccessorTable() {
-                return com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.internal_static_UpdateField_fieldAccessorTable
+                return UpdateFieldOuterClass.internal_static_UpdateField_fieldAccessorTable
                         .ensureFieldAccessorsInitialized(
-                                com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField.class, com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField.Builder.class);
+                                UpdateFieldOuterClass.UpdateField.class, UpdateFieldOuterClass.UpdateField.Builder.class);
             }
 
-            // Construct using com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField.newBuilder()
+            // Construct using UpdateFieldOuterClass.UpdateField.newBuilder()
             private Builder() {
                 maybeForceBuilderInitialization();
             }
@@ -437,17 +437,17 @@ public final class UpdateFieldOuterClass {
             @java.lang.Override
             public com.google.protobuf.Descriptors.Descriptor
             getDescriptorForType() {
-                return com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.internal_static_UpdateField_descriptor;
+                return UpdateFieldOuterClass.internal_static_UpdateField_descriptor;
             }
 
             @java.lang.Override
-            public com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField getDefaultInstanceForType() {
-                return com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField.getDefaultInstance();
+            public UpdateFieldOuterClass.UpdateField getDefaultInstanceForType() {
+                return UpdateFieldOuterClass.UpdateField.getDefaultInstance();
             }
 
             @java.lang.Override
-            public com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField build() {
-                com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField result = buildPartial();
+            public UpdateFieldOuterClass.UpdateField build() {
+                UpdateFieldOuterClass.UpdateField result = buildPartial();
                 if (!result.isInitialized()) {
                     throw newUninitializedMessageException(result);
                 }
@@ -455,8 +455,8 @@ public final class UpdateFieldOuterClass {
             }
 
             @java.lang.Override
-            public com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField buildPartial() {
-                com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField result = new com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField(this);
+            public UpdateFieldOuterClass.UpdateField buildPartial() {
+                UpdateFieldOuterClass.UpdateField result = new UpdateFieldOuterClass.UpdateField(this);
                 result.name_ = name_;
                 result.id_ = id_;
                 onBuilt();
@@ -503,16 +503,16 @@ public final class UpdateFieldOuterClass {
 
             @java.lang.Override
             public Builder mergeFrom(com.google.protobuf.Message other) {
-                if (other instanceof com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField) {
-                    return mergeFrom((com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField) other);
+                if (other instanceof UpdateFieldOuterClass.UpdateField) {
+                    return mergeFrom((UpdateFieldOuterClass.UpdateField) other);
                 } else {
                     super.mergeFrom(other);
                     return this;
                 }
             }
 
-            public Builder mergeFrom(com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField other) {
-                if (other == com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField.getDefaultInstance()) {
+            public Builder mergeFrom(UpdateFieldOuterClass.UpdateField other) {
+                if (other == UpdateFieldOuterClass.UpdateField.getDefaultInstance()) {
                     return this;
                 }
                 if (!other.getName().isEmpty()) {
@@ -537,11 +537,11 @@ public final class UpdateFieldOuterClass {
                     com.google.protobuf.CodedInputStream input,
                     com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws java.io.IOException {
-                com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField parsedMessage = null;
+                UpdateFieldOuterClass.UpdateField parsedMessage = null;
                 try {
                     parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
                 } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                    parsedMessage = (com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField) e.getUnfinishedMessage();
+                    parsedMessage = (UpdateFieldOuterClass.UpdateField) e.getUnfinishedMessage();
                     throw e.unwrapIOException();
                 } finally {
                     if (parsedMessage != null) {
@@ -691,13 +691,13 @@ public final class UpdateFieldOuterClass {
         }
 
         // @@protoc_insertion_point(class_scope:UpdateField)
-        private static final com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField DEFAULT_INSTANCE;
+        private static final UpdateFieldOuterClass.UpdateField DEFAULT_INSTANCE;
 
         static {
-            DEFAULT_INSTANCE = new com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField();
+            DEFAULT_INSTANCE = new UpdateFieldOuterClass.UpdateField();
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField getDefaultInstance() {
+        public static UpdateFieldOuterClass.UpdateField getDefaultInstance() {
             return DEFAULT_INSTANCE;
         }
 
@@ -722,7 +722,7 @@ public final class UpdateFieldOuterClass {
         }
 
         @java.lang.Override
-        public com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField getDefaultInstanceForType() {
+        public UpdateFieldOuterClass.UpdateField getDefaultInstanceForType() {
             return DEFAULT_INSTANCE;
         }
 

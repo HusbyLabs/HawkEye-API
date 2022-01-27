@@ -126,15 +126,15 @@ public final class UpdateValueOuterClass {
 
         public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-            return com.husbylabs.hawkeye.packets.UpdateValueOuterClass.internal_static_UpdateValue_descriptor;
+            return UpdateValueOuterClass.internal_static_UpdateValue_descriptor;
         }
 
         @java.lang.Override
         protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-            return com.husbylabs.hawkeye.packets.UpdateValueOuterClass.internal_static_UpdateValue_fieldAccessorTable
+            return UpdateValueOuterClass.internal_static_UpdateValue_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue.class, com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue.Builder.class);
+                            UpdateValueOuterClass.UpdateValue.class, UpdateValueOuterClass.UpdateValue.Builder.class);
         }
 
         public static final int NAME_FIELD_NUMBER = 1;
@@ -245,10 +245,10 @@ public final class UpdateValueOuterClass {
             if (obj == this) {
                 return true;
             }
-            if (!(obj instanceof com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue)) {
+            if (!(obj instanceof UpdateValueOuterClass.UpdateValue)) {
                 return super.equals(obj);
             }
-            com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue other = (com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue) obj;
+            UpdateValueOuterClass.UpdateValue other = (UpdateValueOuterClass.UpdateValue) obj;
 
             if (!getName()
                     .equals(other.getName())) {
@@ -280,51 +280,51 @@ public final class UpdateValueOuterClass {
             return hash;
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue parseFrom(
+        public static UpdateValueOuterClass.UpdateValue parseFrom(
                 java.nio.ByteBuffer data)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data);
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue parseFrom(
+        public static UpdateValueOuterClass.UpdateValue parseFrom(
                 java.nio.ByteBuffer data,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data, extensionRegistry);
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue parseFrom(
+        public static UpdateValueOuterClass.UpdateValue parseFrom(
                 com.google.protobuf.ByteString data)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data);
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue parseFrom(
+        public static UpdateValueOuterClass.UpdateValue parseFrom(
                 com.google.protobuf.ByteString data,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data, extensionRegistry);
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue parseFrom(byte[] data)
+        public static UpdateValueOuterClass.UpdateValue parseFrom(byte[] data)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data);
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue parseFrom(
+        public static UpdateValueOuterClass.UpdateValue parseFrom(
                 byte[] data,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data, extensionRegistry);
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue parseFrom(java.io.InputStream input)
+        public static UpdateValueOuterClass.UpdateValue parseFrom(java.io.InputStream input)
                 throws java.io.IOException {
             return com.google.protobuf.GeneratedMessageV3
                     .parseWithIOException(PARSER, input);
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue parseFrom(
+        public static UpdateValueOuterClass.UpdateValue parseFrom(
                 java.io.InputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
@@ -332,13 +332,13 @@ public final class UpdateValueOuterClass {
                     .parseWithIOException(PARSER, input, extensionRegistry);
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue parseDelimitedFrom(java.io.InputStream input)
+        public static UpdateValueOuterClass.UpdateValue parseDelimitedFrom(java.io.InputStream input)
                 throws java.io.IOException {
             return com.google.protobuf.GeneratedMessageV3
                     .parseDelimitedWithIOException(PARSER, input);
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue parseDelimitedFrom(
+        public static UpdateValueOuterClass.UpdateValue parseDelimitedFrom(
                 java.io.InputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
@@ -346,14 +346,14 @@ public final class UpdateValueOuterClass {
                     .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue parseFrom(
+        public static UpdateValueOuterClass.UpdateValue parseFrom(
                 com.google.protobuf.CodedInputStream input)
                 throws java.io.IOException {
             return com.google.protobuf.GeneratedMessageV3
                     .parseWithIOException(PARSER, input);
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue parseFrom(
+        public static UpdateValueOuterClass.UpdateValue parseFrom(
                 com.google.protobuf.CodedInputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
@@ -370,7 +370,7 @@ public final class UpdateValueOuterClass {
             return DEFAULT_INSTANCE.toBuilder();
         }
 
-        public static Builder newBuilder(com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue prototype) {
+        public static Builder newBuilder(UpdateValueOuterClass.UpdateValue prototype) {
             return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
         }
 
@@ -393,21 +393,21 @@ public final class UpdateValueOuterClass {
         public static final class Builder extends
                 com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
                 // @@protoc_insertion_point(builder_implements:UpdateValue)
-                com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValueOrBuilder {
+                UpdateValueOuterClass.UpdateValueOrBuilder {
             public static final com.google.protobuf.Descriptors.Descriptor
             getDescriptor() {
-                return com.husbylabs.hawkeye.packets.UpdateValueOuterClass.internal_static_UpdateValue_descriptor;
+                return UpdateValueOuterClass.internal_static_UpdateValue_descriptor;
             }
 
             @java.lang.Override
             protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
             internalGetFieldAccessorTable() {
-                return com.husbylabs.hawkeye.packets.UpdateValueOuterClass.internal_static_UpdateValue_fieldAccessorTable
+                return UpdateValueOuterClass.internal_static_UpdateValue_fieldAccessorTable
                         .ensureFieldAccessorsInitialized(
-                                com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue.class, com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue.Builder.class);
+                                UpdateValueOuterClass.UpdateValue.class, UpdateValueOuterClass.UpdateValue.Builder.class);
             }
 
-            // Construct using com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue.newBuilder()
+            // Construct using UpdateValueOuterClass.UpdateValue.newBuilder()
             private Builder() {
                 maybeForceBuilderInitialization();
             }
@@ -437,17 +437,17 @@ public final class UpdateValueOuterClass {
             @java.lang.Override
             public com.google.protobuf.Descriptors.Descriptor
             getDescriptorForType() {
-                return com.husbylabs.hawkeye.packets.UpdateValueOuterClass.internal_static_UpdateValue_descriptor;
+                return UpdateValueOuterClass.internal_static_UpdateValue_descriptor;
             }
 
             @java.lang.Override
-            public com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue getDefaultInstanceForType() {
-                return com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue.getDefaultInstance();
+            public UpdateValueOuterClass.UpdateValue getDefaultInstanceForType() {
+                return UpdateValueOuterClass.UpdateValue.getDefaultInstance();
             }
 
             @java.lang.Override
-            public com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue build() {
-                com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue result = buildPartial();
+            public UpdateValueOuterClass.UpdateValue build() {
+                UpdateValueOuterClass.UpdateValue result = buildPartial();
                 if (!result.isInitialized()) {
                     throw newUninitializedMessageException(result);
                 }
@@ -455,8 +455,8 @@ public final class UpdateValueOuterClass {
             }
 
             @java.lang.Override
-            public com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue buildPartial() {
-                com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue result = new com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue(this);
+            public UpdateValueOuterClass.UpdateValue buildPartial() {
+                UpdateValueOuterClass.UpdateValue result = new UpdateValueOuterClass.UpdateValue(this);
                 result.name_ = name_;
                 result.id_ = id_;
                 onBuilt();
@@ -503,16 +503,16 @@ public final class UpdateValueOuterClass {
 
             @java.lang.Override
             public Builder mergeFrom(com.google.protobuf.Message other) {
-                if (other instanceof com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue) {
-                    return mergeFrom((com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue) other);
+                if (other instanceof UpdateValueOuterClass.UpdateValue) {
+                    return mergeFrom((UpdateValueOuterClass.UpdateValue) other);
                 } else {
                     super.mergeFrom(other);
                     return this;
                 }
             }
 
-            public Builder mergeFrom(com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue other) {
-                if (other == com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue.getDefaultInstance()) {
+            public Builder mergeFrom(UpdateValueOuterClass.UpdateValue other) {
+                if (other == UpdateValueOuterClass.UpdateValue.getDefaultInstance()) {
                     return this;
                 }
                 if (!other.getName().isEmpty()) {
@@ -537,11 +537,11 @@ public final class UpdateValueOuterClass {
                     com.google.protobuf.CodedInputStream input,
                     com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws java.io.IOException {
-                com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue parsedMessage = null;
+                UpdateValueOuterClass.UpdateValue parsedMessage = null;
                 try {
                     parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
                 } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                    parsedMessage = (com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue) e.getUnfinishedMessage();
+                    parsedMessage = (UpdateValueOuterClass.UpdateValue) e.getUnfinishedMessage();
                     throw e.unwrapIOException();
                 } finally {
                     if (parsedMessage != null) {
@@ -691,13 +691,13 @@ public final class UpdateValueOuterClass {
         }
 
         // @@protoc_insertion_point(class_scope:UpdateValue)
-        private static final com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue DEFAULT_INSTANCE;
+        private static final UpdateValueOuterClass.UpdateValue DEFAULT_INSTANCE;
 
         static {
-            DEFAULT_INSTANCE = new com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue();
+            DEFAULT_INSTANCE = new UpdateValueOuterClass.UpdateValue();
         }
 
-        public static com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue getDefaultInstance() {
+        public static UpdateValueOuterClass.UpdateValue getDefaultInstance() {
             return DEFAULT_INSTANCE;
         }
 
@@ -722,7 +722,7 @@ public final class UpdateValueOuterClass {
         }
 
         @java.lang.Override
-        public com.husbylabs.hawkeye.packets.UpdateValueOuterClass.UpdateValue getDefaultInstanceForType() {
+        public UpdateValueOuterClass.UpdateValue getDefaultInstanceForType() {
             return DEFAULT_INSTANCE;
         }
 

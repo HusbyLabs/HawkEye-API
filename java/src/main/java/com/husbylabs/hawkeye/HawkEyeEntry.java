@@ -3,6 +3,7 @@ package com.husbylabs.hawkeye;
 import lombok.RequiredArgsConstructor;
 
 /**
+ * A wrapper class representing a field
  * @author Noah Husby
  */
 @RequiredArgsConstructor
@@ -78,7 +79,6 @@ public final class HawkEyeEntry {
     public void delete() {
 
     }
-
 
     private final HawkEye instance;
     private final int id;

@@ -116,15 +116,15 @@ public final class ServerHandshakeOuterClass {
 
         public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-            return com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.internal_static_ServerHandshake_descriptor;
+            return ServerHandshakeOuterClass.internal_static_ServerHandshake_descriptor;
         }
 
         @java.lang.Override
         protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-            return com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.internal_static_ServerHandshake_fieldAccessorTable
+            return ServerHandshakeOuterClass.internal_static_ServerHandshake_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake.class, com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake.Builder.class);
+                            ServerHandshakeOuterClass.ServerHandshake.class, ServerHandshakeOuterClass.ServerHandshake.Builder.class);
         }
 
         public static final int PROTOCOL_FIELD_NUMBER = 1;
@@ -207,10 +207,10 @@ public final class ServerHandshakeOuterClass {
             if (obj == this) {
                 return true;
             }
-            if (!(obj instanceof com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake)) {
+            if (!(obj instanceof ServerHandshakeOuterClass.ServerHandshake)) {
                 return super.equals(obj);
             }
-            com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake other = (com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake) obj;
+            ServerHandshakeOuterClass.ServerHandshake other = (ServerHandshakeOuterClass.ServerHandshake) obj;
 
             if (getProtocol()
                 != other.getProtocol()) {
@@ -243,51 +243,51 @@ public final class ServerHandshakeOuterClass {
             return hash;
         }
 
-        public static com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake parseFrom(
+        public static ServerHandshakeOuterClass.ServerHandshake parseFrom(
                 java.nio.ByteBuffer data)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data);
         }
 
-        public static com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake parseFrom(
+        public static ServerHandshakeOuterClass.ServerHandshake parseFrom(
                 java.nio.ByteBuffer data,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data, extensionRegistry);
         }
 
-        public static com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake parseFrom(
+        public static ServerHandshakeOuterClass.ServerHandshake parseFrom(
                 com.google.protobuf.ByteString data)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data);
         }
 
-        public static com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake parseFrom(
+        public static ServerHandshakeOuterClass.ServerHandshake parseFrom(
                 com.google.protobuf.ByteString data,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data, extensionRegistry);
         }
 
-        public static com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake parseFrom(byte[] data)
+        public static ServerHandshakeOuterClass.ServerHandshake parseFrom(byte[] data)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data);
         }
 
-        public static com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake parseFrom(
+        public static ServerHandshakeOuterClass.ServerHandshake parseFrom(
                 byte[] data,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data, extensionRegistry);
         }
 
-        public static com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake parseFrom(java.io.InputStream input)
+        public static ServerHandshakeOuterClass.ServerHandshake parseFrom(java.io.InputStream input)
                 throws java.io.IOException {
             return com.google.protobuf.GeneratedMessageV3
                     .parseWithIOException(PARSER, input);
         }
 
-        public static com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake parseFrom(
+        public static ServerHandshakeOuterClass.ServerHandshake parseFrom(
                 java.io.InputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
@@ -295,13 +295,13 @@ public final class ServerHandshakeOuterClass {
                     .parseWithIOException(PARSER, input, extensionRegistry);
         }
 
-        public static com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake parseDelimitedFrom(java.io.InputStream input)
+        public static ServerHandshakeOuterClass.ServerHandshake parseDelimitedFrom(java.io.InputStream input)
                 throws java.io.IOException {
             return com.google.protobuf.GeneratedMessageV3
                     .parseDelimitedWithIOException(PARSER, input);
         }
 
-        public static com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake parseDelimitedFrom(
+        public static ServerHandshakeOuterClass.ServerHandshake parseDelimitedFrom(
                 java.io.InputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
@@ -309,14 +309,14 @@ public final class ServerHandshakeOuterClass {
                     .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
         }
 
-        public static com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake parseFrom(
+        public static ServerHandshakeOuterClass.ServerHandshake parseFrom(
                 com.google.protobuf.CodedInputStream input)
                 throws java.io.IOException {
             return com.google.protobuf.GeneratedMessageV3
                     .parseWithIOException(PARSER, input);
         }
 
-        public static com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake parseFrom(
+        public static ServerHandshakeOuterClass.ServerHandshake parseFrom(
                 com.google.protobuf.CodedInputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
@@ -333,7 +333,7 @@ public final class ServerHandshakeOuterClass {
             return DEFAULT_INSTANCE.toBuilder();
         }
 
-        public static Builder newBuilder(com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake prototype) {
+        public static Builder newBuilder(ServerHandshakeOuterClass.ServerHandshake prototype) {
             return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
         }
 
@@ -356,21 +356,21 @@ public final class ServerHandshakeOuterClass {
         public static final class Builder extends
                 com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
                 // @@protoc_insertion_point(builder_implements:ServerHandshake)
-                com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshakeOrBuilder {
+                ServerHandshakeOuterClass.ServerHandshakeOrBuilder {
             public static final com.google.protobuf.Descriptors.Descriptor
             getDescriptor() {
-                return com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.internal_static_ServerHandshake_descriptor;
+                return ServerHandshakeOuterClass.internal_static_ServerHandshake_descriptor;
             }
 
             @java.lang.Override
             protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
             internalGetFieldAccessorTable() {
-                return com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.internal_static_ServerHandshake_fieldAccessorTable
+                return ServerHandshakeOuterClass.internal_static_ServerHandshake_fieldAccessorTable
                         .ensureFieldAccessorsInitialized(
-                                com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake.class, com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake.Builder.class);
+                                ServerHandshakeOuterClass.ServerHandshake.class, ServerHandshakeOuterClass.ServerHandshake.Builder.class);
             }
 
-            // Construct using com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake.newBuilder()
+            // Construct using ServerHandshakeOuterClass.ServerHandshake.newBuilder()
             private Builder() {
                 maybeForceBuilderInitialization();
             }
@@ -400,17 +400,17 @@ public final class ServerHandshakeOuterClass {
             @java.lang.Override
             public com.google.protobuf.Descriptors.Descriptor
             getDescriptorForType() {
-                return com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.internal_static_ServerHandshake_descriptor;
+                return ServerHandshakeOuterClass.internal_static_ServerHandshake_descriptor;
             }
 
             @java.lang.Override
-            public com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake getDefaultInstanceForType() {
-                return com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake.getDefaultInstance();
+            public ServerHandshakeOuterClass.ServerHandshake getDefaultInstanceForType() {
+                return ServerHandshakeOuterClass.ServerHandshake.getDefaultInstance();
             }
 
             @java.lang.Override
-            public com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake build() {
-                com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake result = buildPartial();
+            public ServerHandshakeOuterClass.ServerHandshake build() {
+                ServerHandshakeOuterClass.ServerHandshake result = buildPartial();
                 if (!result.isInitialized()) {
                     throw newUninitializedMessageException(result);
                 }
@@ -418,8 +418,8 @@ public final class ServerHandshakeOuterClass {
             }
 
             @java.lang.Override
-            public com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake buildPartial() {
-                com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake result = new com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake(this);
+            public ServerHandshakeOuterClass.ServerHandshake buildPartial() {
+                ServerHandshakeOuterClass.ServerHandshake result = new ServerHandshakeOuterClass.ServerHandshake(this);
                 result.protocol_ = protocol_;
                 result.compatible_ = compatible_;
                 onBuilt();
@@ -466,16 +466,16 @@ public final class ServerHandshakeOuterClass {
 
             @java.lang.Override
             public Builder mergeFrom(com.google.protobuf.Message other) {
-                if (other instanceof com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake) {
-                    return mergeFrom((com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake) other);
+                if (other instanceof ServerHandshakeOuterClass.ServerHandshake) {
+                    return mergeFrom((ServerHandshakeOuterClass.ServerHandshake) other);
                 } else {
                     super.mergeFrom(other);
                     return this;
                 }
             }
 
-            public Builder mergeFrom(com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake other) {
-                if (other == com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake.getDefaultInstance()) {
+            public Builder mergeFrom(ServerHandshakeOuterClass.ServerHandshake other) {
+                if (other == ServerHandshakeOuterClass.ServerHandshake.getDefaultInstance()) {
                     return this;
                 }
                 if (other.getProtocol() != 0) {
@@ -499,11 +499,11 @@ public final class ServerHandshakeOuterClass {
                     com.google.protobuf.CodedInputStream input,
                     com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws java.io.IOException {
-                com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake parsedMessage = null;
+                ServerHandshakeOuterClass.ServerHandshake parsedMessage = null;
                 try {
                     parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
                 } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                    parsedMessage = (com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake) e.getUnfinishedMessage();
+                    parsedMessage = (ServerHandshakeOuterClass.ServerHandshake) e.getUnfinishedMessage();
                     throw e.unwrapIOException();
                 } finally {
                     if (parsedMessage != null) {
@@ -604,13 +604,13 @@ public final class ServerHandshakeOuterClass {
         }
 
         // @@protoc_insertion_point(class_scope:ServerHandshake)
-        private static final com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake DEFAULT_INSTANCE;
+        private static final ServerHandshakeOuterClass.ServerHandshake DEFAULT_INSTANCE;
 
         static {
-            DEFAULT_INSTANCE = new com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake();
+            DEFAULT_INSTANCE = new ServerHandshakeOuterClass.ServerHandshake();
         }
 
-        public static com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake getDefaultInstance() {
+        public static ServerHandshakeOuterClass.ServerHandshake getDefaultInstance() {
             return DEFAULT_INSTANCE;
         }
 
@@ -635,7 +635,7 @@ public final class ServerHandshakeOuterClass {
         }
 
         @java.lang.Override
-        public com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake getDefaultInstanceForType() {
+        public ServerHandshakeOuterClass.ServerHandshake getDefaultInstanceForType() {
             return DEFAULT_INSTANCE;
         }
 
