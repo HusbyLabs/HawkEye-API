@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+option java_package = "com.husbylabs.hawkeye.test";
+
+message UpdateValue {
+    string name = 1;
+    int32 id = 2;
+}

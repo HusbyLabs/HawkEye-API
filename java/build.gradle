@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+}
+
+apply plugin: "maven-publish"
+
+ext {
+    nettyVersion = "4.1.73.Final"
+    lombokVersion = "1.18.22"
+}
+
+group 'com.husbylabs'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    implementation "io.netty:netty-buffer:4.1.73.Final"
+    implementation "com.google.protobuf:protobuf-java:3.19.3"
+
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    testCompileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+    testAnnotationProcessor "org.projectlombok:lombok:$lombokVersion"
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+}

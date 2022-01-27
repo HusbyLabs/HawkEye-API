@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+option java_package = "com.husbylabs.hawkeye.test";
+
+message ServerHandshake {
+    int32 protocol = 1;
+    bool compatible = 2;
+}
