@@ -1,7 +1,7 @@
-package com.husbylabs.hawkeye.util;
+package com.husbylabs.warptables.util;
 
-import com.husbylabs.hawkeye.packets.ClientHandshake;
-import com.husbylabs.hawkeye.packets.ServerHandshake;
+import com.husbylabs.warptables.packets.ClientHandshake;
+import com.husbylabs.warptables.packets.ServerHandshake;
 import lombok.experimental.UtilityClass;
 
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package com.husbylabs.hawkeye;
+package com.husbylabs.warptables;
 
 import lombok.RequiredArgsConstructor;
 
@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
  * @author Noah Husby
  */
 @RequiredArgsConstructor
-public final class HawkEyeEntry {
+public final class WarpTableEntry {
 
     public boolean isValid() {
         return false;
@@ -17,7 +17,7 @@ public final class HawkEyeEntry {
         return id;
     }
 
-    public HawkEye getInstance() {
+    public WarpTable getInstance() {
         return instance;
     }
 
@@ -80,6 +80,6 @@ public final class HawkEyeEntry {
 
     }
 
-    private final HawkEye instance;
+    private final WarpTable instance;
     private final int id;
 }

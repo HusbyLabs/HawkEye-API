@@ -1,4 +1,4 @@
-package com.husbylabs.hawkeye.providers;
+package com.husbylabs.warptables.providers;
 
 import java.util.function.Consumer;
 

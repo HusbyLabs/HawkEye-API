@@ -1,19 +1,19 @@
-package com.husbylabs.hawkeye.providers;
+package com.husbylabs.warptables.providers;
 
-import com.husbylabs.hawkeye.HawkEye;
+import com.husbylabs.warptables.WarpTable;
 import lombok.Getter;
 
 import java.util.function.Consumer;
 
 public abstract class Provider {
     @Getter
-    private HawkEye instance;
+    private WarpTable instance;
 
     public abstract void send(byte[] data);
 
     public abstract void handleMessage(Consumer<byte[]> msg);
 
-    public void init(HawkEye instance) {
+    public void init(WarpTable instance) {
         this.instance = instance;
     }
 }

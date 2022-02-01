@@ -1,6 +1,6 @@
-package com.husbylabs.hawkeye;
+package com.husbylabs.warptables;
 
-import com.husbylabs.hawkeye.providers.Provider;
+import com.husbylabs.warptables.providers.Provider;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -14,27 +14,27 @@ import org.apache.logging.log4j.util.PropertiesUtil;
  * @author Noah Husby
  */
 @UtilityClass
-public class HawkEyeAPI {
+public class WarpTableAPI {
     @Getter
     @Setter
     private static Logger logger = new SimpleLogger("[HawkEye]", Level.INFO, true, false, true, false, "[yyyy/MM/dd HH:mm:ss]", null, PropertiesUtil.getProperties(), System.out);
     /**
-     * Creates a new HawkEye client
+     * Creates a new WarpTable client
      *
      * @param provider The data {@link Provider}
-     * @return A new {@link HawkEye} client
+     * @return A new {@link WarpTable} client
      */
-    public static HawkEye createClient(@NonNull Provider provider) {
-        return new HawkEye(provider, false);
+    public static WarpTable createClient(@NonNull Provider provider) {
+        return new WarpTable(provider, false);
     }
 
     /**
-     * Creates a new HawkEye server
+     * Creates a new WarpTable server
      *
      * @param provider The data {@link Provider}
-     * @return A new {@link HawkEye} client
+     * @return A new {@link WarpTable} client
      */
-    public static HawkEye createServer(@NonNull Provider provider) {
-        return new HawkEye(provider, true);
+    public static WarpTable createServer(@NonNull Provider provider) {
+        return new WarpTable(provider, true);
     }
 }

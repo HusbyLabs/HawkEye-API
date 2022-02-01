@@ -1,9 +1,9 @@
-package com.husbylabs.hawkeye;
+package com.husbylabs.warptables;
 
-import com.husbylabs.hawkeye.packets.ClientHandshake;
-import com.husbylabs.hawkeye.packets.ServerHandshake;
-import com.husbylabs.hawkeye.packets.UpdateField;
-import com.husbylabs.hawkeye.packets.UpdateValue;
+import com.husbylabs.warptables.packets.ClientHandshake;
+import com.husbylabs.warptables.packets.ServerHandshake;
+import com.husbylabs.warptables.packets.UpdateField;
+import com.husbylabs.warptables.packets.UpdateValue;
 
 import java.util.Arrays;
 import java.util.HashMap;

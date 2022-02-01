@@ -1,6 +1,6 @@
-package com.husbylabs.hawkeye;
+package com.husbylabs.warptables;
 
-import com.husbylabs.hawkeye.packets.UpdateField;
+import com.husbylabs.warptables.packets.UpdateField;
 import lombok.Data;
 
 /**

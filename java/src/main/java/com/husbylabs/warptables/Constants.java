@@ -1,4 +1,4 @@
-package com.husbylabs.hawkeye;
+package com.husbylabs.warptables;
 
 import lombok.experimental.UtilityClass;
 

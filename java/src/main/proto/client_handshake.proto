@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option java_package = "com.husbylabs.hawkeye.packets";
+option java_package = "com.husbylabs.warptables.packets";
 option java_multiple_files = true;
 
 message ClientHandshake {

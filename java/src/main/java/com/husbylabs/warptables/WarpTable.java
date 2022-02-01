@@ -1,10 +1,9 @@
-package com.husbylabs.hawkeye;
+package com.husbylabs.warptables;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.husbylabs.hawkeye.packets.ClientHandshake;
-import com.husbylabs.hawkeye.packets.UpdateFieldOuterClass;
-import com.husbylabs.hawkeye.providers.Provider;
-import com.husbylabs.hawkeye.util.PacketUtil;
+import com.husbylabs.warptables.packets.ClientHandshake;
+import com.husbylabs.warptables.packets.UpdateFieldOuterClass;
+import com.husbylabs.warptables.providers.Provider;
+import com.husbylabs.warptables.util.PacketUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
@@ -20,22 +19,22 @@ import java.util.Map;
  * @author Noah Husby
  */
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public final class HawkEye {
+public final class WarpTable {
     @Getter
     private final Provider provider;
     @Getter
     private final boolean server;
 
-    private Map<Integer, HawkEyeEntry> fields = new HashMap<>();
+    private Map<Integer, WarpTableEntry> fields = new HashMap<>();
     private Map<String, Integer> fieldTags = new HashMap<>();
 
     private State state = State.HANDSHAKE;
 
     /**
-     * Start the HawkEye connection
+     * Start the WarpTable connection
      */
     public void start() {
-        HawkEyeAPI.getLogger().info("Starting HawkEye client");
+        WarpTableAPI.getLogger().info("Starting WarpTable client");
         provider.handleMessage(this::handleMessage);
         if (!server) {
             // Send handshake to server
@@ -55,35 +54,35 @@ public final class HawkEye {
     }
 
     /**
-     * Gets a {@link HawkEyeEntry} by its registration id
+     * Gets a {@link WarpTableEntry} by its registration id
      *
      * @param id The registration id
-     * @return {@link HawkEyeEntry} if exists, null if not
+     * @return {@link WarpTableEntry} if exists, null if not
      */
-    public HawkEyeEntry get(int id) {
+    public WarpTableEntry get(int id) {
         return fields.get(id);
     }
 
     /**
-     * Gets a {@link HawkEyeEntry} by its tag
+     * Gets a {@link WarpTableEntry} by its tag
      * @param tag The tag
-     * @return {@link HawkEyeEntry} if exists, otherwise a new entry will be created
+     * @return {@link WarpTableEntry} if exists, otherwise a new entry will be created
      */
-    public HawkEyeEntry get(@NonNull String tag) {
+    public WarpTableEntry get(@NonNull String tag) {
         if(!fieldTags.containsKey(tag)) {
-            HawkEyeEntry entry = create();
+            WarpTableEntry entry = create();
             fieldTags.put(tag, entry.getId());
             return entry;
         }
         return get(fieldTags.get(tag));
     }
 
-    public HawkEyeEntry create() {
+    public WarpTableEntry create() {
         int id = fields.size();
         while(fields.containsKey(id)) {
             id++;
         }
-        HawkEyeEntry entry = new HawkEyeEntry(this, id);
+        WarpTableEntry entry = new WarpTableEntry(this, id);
         fields.put(id, entry);
         return entry;
     }
