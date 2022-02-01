@@ -1,7 +1,7 @@
 package com.husbylabs.hawkeye.util;
 
-import com.husbylabs.hawkeye.packets.ClientHandshakeOuterClass.ClientHandshake;
-import com.husbylabs.hawkeye.packets.ServerHandshakeOuterClass.ServerHandshake;
+import com.husbylabs.hawkeye.packets.ClientHandshake;
+import com.husbylabs.hawkeye.packets.ServerHandshake;
 import lombok.experimental.UtilityClass;
 
 import java.util.HashMap;

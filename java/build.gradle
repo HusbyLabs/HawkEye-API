@@ -1,12 +1,21 @@
-plugins {
-    id 'java'
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.google.protobuf:protobuf-gradle-plugin:0.8.18"
+    }
 }
 
+apply plugin: "java"
+apply plugin: "com.google.protobuf"
 apply plugin: "maven-publish"
 
 ext {
     nettyVersion = "4.1.73.Final"
     lombokVersion = "1.18.22"
+    websocketVersion = "1.5.2"
+    log4jVersion = "2.17.1"
 }
 
 group 'com.husbylabs'
@@ -18,6 +27,8 @@ repositories {
 
 dependencies {
 
+    compileOnly "org.java-websocket:Java-WebSocket:$websocketVersion"
+    implementation "org.apache.logging.log4j:log4j-core:$log4jVersion"
     implementation "io.netty:netty-buffer:4.1.73.Final"
     implementation "com.google.protobuf:protobuf-java:3.19.3"
 

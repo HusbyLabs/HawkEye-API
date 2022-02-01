@@ -1,8 +1,9 @@
 syntax = "proto3";
 
 option java_package = "com.husbylabs.hawkeye.packets";
+option java_multiple_files = true;
 
-message UpdateValue {
+message UpdateField {
     string name = 1;
     int32 id = 2;
 }

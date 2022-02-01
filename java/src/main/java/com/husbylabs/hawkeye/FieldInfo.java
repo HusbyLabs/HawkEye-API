@@ -1,6 +1,6 @@
 package com.husbylabs.hawkeye;
 
-import com.husbylabs.hawkeye.packets.UpdateFieldOuterClass.UpdateField;
+import com.husbylabs.hawkeye.packets.UpdateField;
 import lombok.Data;
 
 /**

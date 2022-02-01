@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 /**
  * @author Noah Husby
  */
-public class WebSocketServerProvider implements Provider {
+public class WebSocketServerProvider extends Provider {
     @Override
     public void send(byte[] data) {
 

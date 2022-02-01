@@ -1,8 +1,8 @@
 package com.husbylabs.hawkeye;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.husbylabs.hawkeye.packets.ClientHandshakeOuterClass;
-import com.husbylabs.hawkeye.packets.ClientHandshakeOuterClass.ClientHandshake;
+import com.husbylabs.hawkeye.packets.ClientHandshake;
+import com.husbylabs.hawkeye.packets.UpdateFieldOuterClass;
 import com.husbylabs.hawkeye.providers.Provider;
 import com.husbylabs.hawkeye.util.PacketUtil;
 import lombok.AccessLevel;
@@ -11,7 +11,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +35,7 @@ public final class HawkEye {
      * Start the HawkEye connection
      */
     public void start() {
+        HawkEyeAPI.getLogger().info("Starting HawkEye client");
         provider.handleMessage(this::handleMessage);
         if (!server) {
             // Send handshake to server
@@ -88,14 +88,15 @@ public final class HawkEye {
         return entry;
     }
 
-
-
     private void handleMessage(byte[] data) {
+        /*
         try {
             ClientHandshake handshake = ClientHandshake.parseFrom(data);
             System.out.println(isServer() + ": " + handshake.getProtocol());
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
         }
+
+         */
     }
 }
