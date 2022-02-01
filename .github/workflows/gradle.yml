@@ -18,6 +18,9 @@ jobs:
       with:
         java-version: '8'
         distribution: 'temurin'
+    - name: Make gradlew executable
+      working-directory: ./java
+      run: chmod +x ./gradlew
     - name: Build with Gradle
       working-directory: ./java
       run: ./gradlew build
