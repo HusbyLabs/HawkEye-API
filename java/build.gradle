@@ -30,7 +30,7 @@ dependencies {
     compileOnly "org.java-websocket:Java-WebSocket:$websocketVersion"
     implementation "org.apache.logging.log4j:log4j-core:$log4jVersion"
     implementation "io.netty:netty-buffer:4.1.73.Final"
-    implementation "com.google.protobuf:protobuf-java:3.19.3"
+    implementation "com.google.protobuf:protobuf-java:3.19.4"
 
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     testCompileOnly "org.projectlombok:lombok:$lombokVersion"
