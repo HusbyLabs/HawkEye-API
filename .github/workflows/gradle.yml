@@ -21,6 +21,8 @@ jobs:
     - name: Make gradlew executable
       working-directory: ./java
       run: chmod +x ./gradlew
+    - name: Install Protoc
+      uses: arduino/setup-protoc@v1
     - name: Build with Gradle
       working-directory: ./java
       run: ./gradlew build
