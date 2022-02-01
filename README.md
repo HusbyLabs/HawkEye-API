@@ -1,4 +1,4 @@
-# HawkEye-API
+# warptables
 
 ![HawkEye-API](https://img.shields.io/npm/v/warptables)
 [![Java](https://github.com/HusbyLabs/HawkEye-API/actions/workflows/gradle.yml/badge.svg)](https://github.com/HusbyLabs/warptables/actions/workflows/gradle.yml)
