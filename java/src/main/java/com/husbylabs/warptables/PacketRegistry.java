@@ -34,6 +34,7 @@ import java.util.Map;
 
 /**
  * A registry for assigning a packet tag to each packet
+ *
  * @author Noah Husby
  */
 public class PacketRegistry {
@@ -56,7 +57,7 @@ public class PacketRegistry {
      * Encodes outgoing data with packet tag
      *
      * @param clazz The packet class
-     * @param data The packet data
+     * @param data  The packet data
      * @return The encoded binary data
      */
     public static byte[] encode(Object clazz, byte[] data) {
@@ -83,7 +84,7 @@ public class PacketRegistry {
      * Register a packet
      *
      * @param packet {@link Packet}
-     * @param clazz The matching protobuf packet
+     * @param clazz  The matching protobuf packet
      */
     public static void register(Packet packet, Object clazz) {
         packetsByTag.put(packet.getTag(), packet);

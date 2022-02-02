@@ -23,6 +23,7 @@ import lombok.Data;
 
 /**
  * An entity representing incoming packet data
+ *
  * @author Noah Husby
  */
 @Data

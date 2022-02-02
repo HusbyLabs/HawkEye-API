@@ -19,9 +19,6 @@
 
 package com.husbylabs.warptables;
 
-import com.husbylabs.warptables.exceptions.InvalidProviderException;
-import com.husbylabs.warptables.providers.Provider;
-import com.husbylabs.warptables.providers.ProviderMetadata;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -31,6 +28,8 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.simple.SimpleLogger;
 import org.apache.logging.log4j.util.PropertiesUtil;
 
+import java.net.InetSocketAddress;
+
 /**
  * @author Noah Husby
  */
@@ -39,31 +38,24 @@ public class WarpTablesAPI {
     @Getter
     @Setter
     private static Logger logger = new SimpleLogger("[WarpTables]", Level.INFO, true, false, true, false, "[yyyy/MM/dd HH:mm:ss]", null, PropertiesUtil.getProperties(), System.out);
+
     /**
      * Creates a new WarpTable client
      *
-     * @param provider The data {@link Provider}
+     * @param address The address of the server
      * @return A new {@link WTClient} client
      */
-    public static WTClient createClient(@NonNull Provider provider) throws InvalidProviderException {
-        ProviderMetadata metadata = provider.getMetadata();
-        if(!metadata.isClientSupported()) {
-            throw new InvalidProviderException(false);
-        }
-        return new WTClient(provider);
+    public static WarpTableInstance createClient(@NonNull InetSocketAddress address) {
+        return new WTClient(address);
     }
 
     /**
      * Creates a new WarpTable server
      *
-     * @param provider The data {@link Provider}
+     * @param port The port of the server
      * @return A new {@link WTClient} client
      */
-    public static WTClient createServer(@NonNull Provider provider) throws InvalidProviderException {
-        ProviderMetadata metadata = provider.getMetadata();
-        if(!metadata.isServerSupported()) {
-            throw new InvalidProviderException(true);
-        }
-        return new WTServer(provider);
+    public static WarpTableInstance createServer(int port) {
+        return new WTServer(new InetSocketAddress("127.0.0.1", port));
     }
 }

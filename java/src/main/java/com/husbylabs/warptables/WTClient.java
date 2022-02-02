@@ -19,21 +19,13 @@
 
 package com.husbylabs.warptables;
 
-import com.husbylabs.warptables.packets.ClientHandshake;
 import com.husbylabs.warptables.packets.CreateTableRequest;
-import com.husbylabs.warptables.providers.Provider;
-import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
+import java.net.InetSocketAddress;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 /**
  * The WarpTables client for writing and reading data
@@ -45,10 +37,8 @@ public class WTClient extends WarpTableInstance {
     private final Map<Integer, WarpTableEntry> fields = new HashMap<>();
     private Map<String, Integer> fieldTags = new HashMap<>();
 
-    ScheduledFuture<?> providerConnectionThread = null;
-
-    protected WTClient(Provider provider) {
-        super(provider);
+    protected WTClient(InetSocketAddress address) {
+        super(address);
     }
 
     /**
@@ -56,42 +46,25 @@ public class WTClient extends WarpTableInstance {
      */
     @Override
     public void start() {
-        WarpTablesAPI.getLogger().info("Starting WarpTable client");
-        provider.init(this);
-        providerConnectionThread = Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
-            if(provider.isConnected()) {
-                providerConnectionThread.cancel(false);
-                providerConnectionThread = null;
-            }
-            provider.open();
-        }, 0, 2, TimeUnit.SECONDS);
-        ClientHandshake handshake = ClientHandshake.newBuilder()
-                .setProtocol(Constants.PROTO_VER)
-                .build();
-        provider.send(PacketRegistry.encode(ClientHandshake.class, handshake.toByteArray()));
     }
 
     @Override
     public void stop() {
         WarpTablesAPI.getLogger().info("Stopping WarpTable client");
-        if(providerConnectionThread != null) {
-            providerConnectionThread.cancel(true);
-            providerConnectionThread = null;
-        }
-        provider.close();
     }
 
     @Override
     public Table getTable(String tableName) {
         // Check server for table information
-        if(!tableTagsByName.containsKey(tableName)) {
+        if (!tableTagsByName.containsKey(tableName)) {
             int i = 0;
-            while(tablesByTag.containsKey(i)) i++;
+            while (tablesByTag.containsKey(i)) {
+                i++;
+            }
             CreateTableRequest request = CreateTableRequest.newBuilder()
                     .setName(tableName)
                     .setSalt(generateSaltString())
                     .build();
-            provider.send(PacketRegistry.encode(CreateTableRequest.class, request.toByteArray()));
         }
         return null;
     }
@@ -117,11 +90,12 @@ public class WTClient extends WarpTableInstance {
 
     /**
      * Gets a {@link WarpTableEntry} by its tag
+     *
      * @param tag The tag
      * @return {@link WarpTableEntry} if exists, otherwise a new entry will be created
      */
     public WarpTableEntry get(@NonNull String tag) {
-        if(!fieldTags.containsKey(tag)) {
+        if (!fieldTags.containsKey(tag)) {
             WarpTableEntry entry = create();
             fieldTags.put(tag, entry.getId());
             return entry;
@@ -131,7 +105,7 @@ public class WTClient extends WarpTableInstance {
 
     public WarpTableEntry create() {
         int id = fields.size();
-        while(fields.containsKey(id)) {
+        while (fields.containsKey(id)) {
             id++;
         }
         WarpTableEntry entry = new WarpTableEntry(this, id);
@@ -140,9 +114,9 @@ public class WTClient extends WarpTableInstance {
     }
 
 
-
     /**
      * [Internal use only] Parses an incoming message
+     *
      * @param data The incoming data
      */
     public void onMessage(byte[] data) {

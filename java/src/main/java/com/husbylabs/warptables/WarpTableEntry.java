@@ -23,10 +23,20 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * A wrapper class representing a field
+ *
  * @author Noah Husby
  */
 @RequiredArgsConstructor
 public final class WarpTableEntry {
+
+    private final WTClient instance;
+    private final int id;
+
+    public static boolean isValidType(Object data) {
+        return data instanceof Number
+               || data instanceof Boolean
+               || data instanceof String;
+    }
 
     public boolean isValid() {
         return false;
@@ -73,12 +83,6 @@ public final class WarpTableEntry {
         return "";
     }
 
-    public static boolean isValidType(Object data) {
-        return data instanceof Number
-               || data instanceof Boolean
-               || data instanceof String;
-    }
-
     public boolean setBoolean(boolean value) {
         return false;
     }
@@ -98,7 +102,4 @@ public final class WarpTableEntry {
     public void delete() {
 
     }
-
-    private final WTClient instance;
-    private final int id;
 }

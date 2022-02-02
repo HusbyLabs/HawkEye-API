@@ -19,11 +19,11 @@
 
 package com.husbylabs.warptables;
 
-import com.husbylabs.warptables.providers.Provider;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -35,13 +35,15 @@ import java.util.TreeMap;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class WarpTableInstance {
     @Getter
-    protected final Provider provider;
+    protected final InetSocketAddress address;
 
     protected final Map<Integer, Table> tablesByTag = new HashMap<>();
     protected final Map<String, Integer> tableTagsByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public abstract void start();
+
     public abstract void stop();
+
     public abstract Table getTable(String table);
 
     /**

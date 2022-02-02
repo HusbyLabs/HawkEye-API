@@ -28,5 +28,5 @@ import lombok.experimental.UtilityClass;
 public final class Constants {
 
     public static final int PROTO_VER = 100;
-    public static final Integer[] COMPATIBLE_PROTOCOL_VERSIONS = {100};
+    public static final Integer[] COMPATIBLE_PROTOCOL_VERSIONS = { 100 };
 }

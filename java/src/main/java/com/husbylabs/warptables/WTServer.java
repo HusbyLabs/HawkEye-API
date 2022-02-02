@@ -19,19 +19,14 @@
 
 package com.husbylabs.warptables;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.husbylabs.warptables.packets.ClientHandshake;
-import com.husbylabs.warptables.packets.ServerHandshake;
-import com.husbylabs.warptables.providers.Provider;
-
-import java.util.Arrays;
+import java.net.InetSocketAddress;
 
 /**
  * @author Noah Husby
  */
-public class WTServer extends WTClient {
-    protected WTServer(Provider provider) {
-        super(provider);
+public class WTServer extends WarpTableInstance {
+    protected WTServer(InetSocketAddress address) {
+        super(address);
     }
 
     @Override
@@ -40,26 +35,13 @@ public class WTServer extends WTClient {
     }
 
     @Override
-    public void onMessage(byte[] data) {
-        PacketMetadata metadata = PacketRegistry.decode(data);
-        switch (metadata.getPacket()) {
-            case CLIENT_HANDSHAKE:
-                handleClientHandshake(data);
-                return;
-        }
-        super.onMessage(data);
+    public void stop() {
+
     }
 
-    private void handleClientHandshake(byte[] data) {
-        try {
-            ClientHandshake clientHandshake = ClientHandshake.parseFrom(data);
-            boolean compatible = Arrays.asList(Constants.COMPATIBLE_PROTOCOL_VERSIONS).contains(clientHandshake.getProtocol());
-            ServerHandshake handshake = ServerHandshake.newBuilder()
-                    .setProtocol(Constants.PROTO_VER)
-                    .setCompatible(compatible)
-                    .build();
-            provider.send(PacketRegistry.encode(ServerHandshake.class, handshake.toByteArray()));
-        } catch (InvalidProtocolBufferException ignored) {
-        }
+    @Override
+    public Table getTable(String table) {
+        return null;
     }
+
 }

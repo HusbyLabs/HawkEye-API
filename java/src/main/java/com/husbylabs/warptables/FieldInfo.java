@@ -24,6 +24,7 @@ import lombok.Data;
 
 /**
  * A class representing the identify of a field
+ *
  * @author Noah Husby
  */
 @Data

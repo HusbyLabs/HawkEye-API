@@ -2,9 +2,8 @@ syntax = "proto3";
 
 option java_package = "com.husbylabs.warptables.packets";
 option java_multiple_files = true;
-option java_generic_services = true;
 
-service TableService {
+service Table {
     rpc Create(CreateTableRequest) returns (CreateTableResponse);
 }
 
