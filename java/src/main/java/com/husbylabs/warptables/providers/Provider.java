@@ -11,6 +11,16 @@ public abstract class Provider {
 
     public abstract void send(byte[] data);
 
+    public abstract ProviderMetadata getMetadata();
+
+    public abstract void open();
+
+    public abstract void close();
+
+    public abstract boolean isConnected();
+
+    public abstract String getName();
+
     public void init(WarpTable instance) {
         this.instance = instance;
     }

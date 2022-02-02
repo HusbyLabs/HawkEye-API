@@ -1,6 +1,8 @@
 package com.husbylabs.warptables;
 
+import com.husbylabs.warptables.exceptions.InvalidProviderException;
 import com.husbylabs.warptables.providers.Provider;
+import com.husbylabs.warptables.providers.ProviderMetadata;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -24,7 +26,11 @@ public class WarpTableAPI {
      * @param provider The data {@link Provider}
      * @return A new {@link WarpTable} client
      */
-    public static WarpTable createClient(@NonNull Provider provider) {
+    public static WarpTable createClient(@NonNull Provider provider) throws InvalidProviderException {
+        ProviderMetadata metadata = provider.getMetadata();
+        if(!metadata.isClientSupported()) {
+            throw new InvalidProviderException(false);
+        }
         return new WarpTable(provider);
     }
 
@@ -34,7 +40,11 @@ public class WarpTableAPI {
      * @param provider The data {@link Provider}
      * @return A new {@link WarpTable} client
      */
-    public static WarpTable createServer(@NonNull Provider provider) {
+    public static WarpTable createServer(@NonNull Provider provider) throws InvalidProviderException {
+        ProviderMetadata metadata = provider.getMetadata();
+        if(!metadata.isServerSupported()) {
+            throw new InvalidProviderException(true);
+        }
         return new WarpTableServer(provider);
     }
 }

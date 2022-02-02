@@ -11,6 +11,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 
 /**
  * The WarpTables client for writing and reading data
@@ -20,7 +23,7 @@ import java.util.UUID;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class WarpTable {
     @Getter
-    private final Provider provider;
+    protected final Provider provider;
 
     @Getter
     protected UUID uniqueId = new UUID(0L, 0L);
@@ -28,18 +31,24 @@ public class WarpTable {
     private Map<Integer, WarpTableEntry> fields = new HashMap<>();
     private Map<String, Integer> fieldTags = new HashMap<>();
 
-    private State state = State.HANDSHAKE;
+    ScheduledFuture<?> providerConnectionThread = null;
 
     /**
      * Start the WarpTable connection
      */
     public void start() {
         WarpTableAPI.getLogger().info("Starting WarpTable client");
-        provider.init(this);
+        openProvider();
         ClientHandshake handshake = ClientHandshake.newBuilder()
                 .setProtocol(Constants.PROTO_VER)
                 .build();
         provider.send(PacketRegistry.encode(ClientHandshake.class, handshake.toByteArray()));
+    }
+
+    protected void openProvider() {
+        provider.init(this);
+        WarpTableAPI.getLogger().info("Opening provider [" + provider.getName() + "]");
+        provider.open();
     }
 
     public void setFieldInfo(FieldInfo info) {
