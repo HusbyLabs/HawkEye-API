@@ -20,8 +20,12 @@
 package com.husbylabs.warptables;
 
 import com.husbylabs.warptables.packets.ClientHandshake;
+import com.husbylabs.warptables.packets.CreateTableRequest;
+import com.husbylabs.warptables.packets.CreateTableResponse;
 import com.husbylabs.warptables.packets.ServerHandshake;
 import com.husbylabs.warptables.packets.UpdateField;
+import com.husbylabs.warptables.packets.UpdateTableRequest;
+import com.husbylabs.warptables.packets.UpdateTableResponse;
 import com.husbylabs.warptables.packets.UpdateValue;
 
 import java.util.Arrays;
@@ -42,6 +46,10 @@ public class PacketRegistry {
         register(Packet.SERVER_HANDSHAKE, ServerHandshake.class);
         register(Packet.UPDATE_FIELD, UpdateField.class);
         register(Packet.UPDATE_VALUE, UpdateValue.class);
+        register(Packet.CREATE_TABLE_REQUEST, CreateTableRequest.class);
+        register(Packet.CREATE_TABLE_RESPONSE, CreateTableResponse.class);
+        register(Packet.UPDATE_TABLE_REQUEST, UpdateTableRequest.class);
+        register(Packet.UPDATE_TABLE_RESPONSE, UpdateTableResponse.class);
     }
 
     /**

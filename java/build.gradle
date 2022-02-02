@@ -16,6 +16,7 @@ ext {
     lombokVersion = "1.18.22"
     websocketVersion = "1.5.2"
     log4jVersion = "2.17.1"
+    grpcVersion = "1.44.0"
 }
 
 group 'com.husbylabs'
@@ -31,6 +32,9 @@ dependencies {
     implementation "org.apache.logging.log4j:log4j-core:$log4jVersion"
     implementation "io.netty:netty-buffer:4.1.73.Final"
     implementation "com.google.protobuf:protobuf-java:3.19.4"
+    runtimeOnly "io.grpc:grpc-netty-shaded:1.44.0"
+    implementation "io.grpc:grpc-protobuf:1.44.0"
+    implementation "io.grpc:grpc-stub:1.44.0"
 
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     testCompileOnly "org.projectlombok:lombok:$lombokVersion"

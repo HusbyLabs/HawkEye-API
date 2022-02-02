@@ -24,6 +24,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.TreeMap;
+
 /**
  * @author Noah Husby
  */
@@ -32,7 +37,26 @@ public abstract class WarpTableInstance {
     @Getter
     protected final Provider provider;
 
+    protected final Map<Integer, Table> tablesByTag = new HashMap<>();
+    protected final Map<String, Integer> tableTagsByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
     public abstract void start();
     public abstract void stop();
     public abstract Table getTable(String table);
+
+    /**
+     * Generates a random 6-character string
+     *
+     * @return Random string
+     */
+    public String generateSaltString() {
+        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+        while (salt.length() < 6) {
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+        return salt.toString();
+    }
 }

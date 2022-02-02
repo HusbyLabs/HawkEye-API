@@ -17,22 +17,5 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE
  */
 
-package com.husbylabs.warptables;
-
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-/**
- * @author Noah Husby
- */
-@RequiredArgsConstructor
-public enum Packet {
-    CLIENT_HANDSHAKE(0), SERVER_HANDSHAKE(1), UPDATE_FIELD(2), UPDATE_VALUE(3), CREATE_TABLE_REQUEST(4), CREATE_TABLE_RESPONSE(5), UPDATE_TABLE_REQUEST(6), UPDATE_TABLE_RESPONSE(7);
-
-    @Getter
-    private final byte tag;
-
-    Packet(int tag) {
-        this((byte) tag);
-    }
-}
+import * as grpc from '@grpc/grpc-js'
+import * as protoLoader from '@grpc/proto-loader'

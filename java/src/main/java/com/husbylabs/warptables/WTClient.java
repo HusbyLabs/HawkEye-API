@@ -20,6 +20,7 @@
 package com.husbylabs.warptables;
 
 import com.husbylabs.warptables.packets.ClientHandshake;
+import com.husbylabs.warptables.packets.CreateTableRequest;
 import com.husbylabs.warptables.providers.Provider;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -41,8 +42,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class WTClient extends WarpTableInstance {
 
-    private final Map<Integer, Table> tablesByTag = new HashMap<>();
-    private final Map<String, Integer> tableTagsByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<Integer, WarpTableEntry> fields = new HashMap<>();
     private Map<String, Integer> fieldTags = new HashMap<>();
 
@@ -88,8 +87,11 @@ public class WTClient extends WarpTableInstance {
         if(!tableTagsByName.containsKey(tableName)) {
             int i = 0;
             while(tablesByTag.containsKey(i)) i++;
-            Table table = new Table();
-
+            CreateTableRequest request = CreateTableRequest.newBuilder()
+                    .setName(tableName)
+                    .setSalt(generateSaltString())
+                    .build();
+            provider.send(PacketRegistry.encode(CreateTableRequest.class, request.toByteArray()));
         }
         return null;
     }
@@ -137,12 +139,13 @@ public class WTClient extends WarpTableInstance {
         return entry;
     }
 
+
+
     /**
      * [Internal use only] Parses an incoming message
      * @param data The incoming data
      */
     public void onMessage(byte[] data) {
         PacketMetadata metadata = PacketRegistry.decode(data);
-
     }
 }
