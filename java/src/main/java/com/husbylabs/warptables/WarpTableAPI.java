@@ -17,7 +17,7 @@ import org.apache.logging.log4j.util.PropertiesUtil;
 public class WarpTableAPI {
     @Getter
     @Setter
-    private static Logger logger = new SimpleLogger("[HawkEye]", Level.INFO, true, false, true, false, "[yyyy/MM/dd HH:mm:ss]", null, PropertiesUtil.getProperties(), System.out);
+    private static Logger logger = new SimpleLogger("[WarpTables]", Level.INFO, true, false, true, false, "[yyyy/MM/dd HH:mm:ss]", null, PropertiesUtil.getProperties(), System.out);
     /**
      * Creates a new WarpTable client
      *
@@ -25,7 +25,7 @@ public class WarpTableAPI {
      * @return A new {@link WarpTable} client
      */
     public static WarpTable createClient(@NonNull Provider provider) {
-        return new WarpTable(provider, false);
+        return new WarpTable(provider);
     }
 
     /**
@@ -35,6 +35,6 @@ public class WarpTableAPI {
      * @return A new {@link WarpTable} client
      */
     public static WarpTable createServer(@NonNull Provider provider) {
-        return new WarpTable(provider, true);
+        return new WarpTableServer(provider);
     }
 }

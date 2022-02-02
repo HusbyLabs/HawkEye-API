@@ -10,9 +10,4 @@ public class WebSocketServerProvider extends Provider {
     public void send(byte[] data) {
 
     }
-
-    @Override
-    public void handleMessage(Consumer<byte[]> msg) {
-
-    }
 }

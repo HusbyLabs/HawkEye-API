@@ -1,9 +1,7 @@
 package com.husbylabs.warptables;
 
 import com.husbylabs.warptables.packets.ClientHandshake;
-import com.husbylabs.warptables.packets.UpdateFieldOuterClass;
 import com.husbylabs.warptables.providers.Provider;
-import com.husbylabs.warptables.util.PacketUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
@@ -12,18 +10,20 @@ import lombok.RequiredArgsConstructor;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
- * The HawkEye client for writing and reading data
+ * The WarpTables client for writing and reading data
  *
  * @author Noah Husby
  */
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public final class WarpTable {
+public class WarpTable {
     @Getter
     private final Provider provider;
+
     @Getter
-    private final boolean server;
+    protected UUID uniqueId = new UUID(0L, 0L);
 
     private Map<Integer, WarpTableEntry> fields = new HashMap<>();
     private Map<String, Integer> fieldTags = new HashMap<>();
@@ -35,14 +35,11 @@ public final class WarpTable {
      */
     public void start() {
         WarpTableAPI.getLogger().info("Starting WarpTable client");
-        provider.handleMessage(this::handleMessage);
-        if (!server) {
-            // Send handshake to server
-            ClientHandshake handshake = ClientHandshake.newBuilder()
-                    .setProtocol(Constants.PROTO_VER)
-                    .build();
-            provider.send(PacketUtil.identify(ClientHandshake.class, handshake.toByteArray()));
-        }
+        provider.init(this);
+        ClientHandshake handshake = ClientHandshake.newBuilder()
+                .setProtocol(Constants.PROTO_VER)
+                .build();
+        provider.send(PacketRegistry.encode(ClientHandshake.class, handshake.toByteArray()));
     }
 
     public void setFieldInfo(FieldInfo info) {
@@ -87,15 +84,12 @@ public final class WarpTable {
         return entry;
     }
 
-    private void handleMessage(byte[] data) {
-        /*
-        try {
-            ClientHandshake handshake = ClientHandshake.parseFrom(data);
-            System.out.println(isServer() + ": " + handshake.getProtocol());
-        } catch (InvalidProtocolBufferException e) {
-            e.printStackTrace();
-        }
+    /**
+     * [Internal use only] Parses an incoming message
+     * @param data The incoming data
+     */
+    public void onMessage(byte[] data) {
+        PacketMetadata metadata = PacketRegistry.decode(data);
 
-         */
     }
 }

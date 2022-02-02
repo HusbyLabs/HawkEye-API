@@ -11,8 +11,6 @@ public abstract class Provider {
 
     public abstract void send(byte[] data);
 
-    public abstract void handleMessage(Consumer<byte[]> msg);
-
     public void init(WarpTable instance) {
         this.instance = instance;
     }
