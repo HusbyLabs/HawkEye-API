@@ -15,9 +15,12 @@ apply plugin: "maven-publish"
 ext {
     nettyVersion = "4.1.73.Final"
     lombokVersion = "1.18.22"
+    protobufVersion = "3.19.4"
     websocketVersion = "1.5.2"
     log4jVersion = "2.17.1"
     grpcVersion = "1.44.0"
+    javaxVersion = "1.3.2"
+    nettyVersion = "4.1.73.Final"
 }
 
 group 'com.husbylabs'
@@ -31,11 +34,12 @@ dependencies {
 
     compileOnly "org.java-websocket:Java-WebSocket:$websocketVersion"
     implementation "org.apache.logging.log4j:log4j-core:$log4jVersion"
-    implementation "io.netty:netty-buffer:4.1.73.Final"
-    implementation "com.google.protobuf:protobuf-java:3.19.4"
+    implementation "io.netty:netty-buffer:$nettyVersion"
+    implementation "com.google.protobuf:protobuf-java:$protobufVersion"
     runtimeOnly "io.grpc:grpc-netty-shaded:$grpcVersion"
     implementation "io.grpc:grpc-protobuf:$grpcVersion"
     implementation "io.grpc:grpc-stub:$grpcVersion"
+    implementation "javax.annotation:javax.annotation-api:$javaxVersion"
 
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     testCompileOnly "org.projectlombok:lombok:$lombokVersion"
