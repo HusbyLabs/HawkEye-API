@@ -19,7 +19,6 @@
 
 package com.husbylabs.warptables;
 
-import com.husbylabs.warptables.packets.CreateTableRequest;
 import lombok.NonNull;
 
 import java.net.InetSocketAddress;
@@ -61,10 +60,6 @@ public class WTClient extends WarpTableInstance {
             while (tablesByTag.containsKey(i)) {
                 i++;
             }
-            CreateTableRequest request = CreateTableRequest.newBuilder()
-                    .setName(tableName)
-                    .setSalt(generateSaltString())
-                    .build();
         }
         return null;
     }
