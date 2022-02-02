@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option java_package = "com.husbylabs.warptables.packets";
+option java_multiple_files = true;
+
+message CreateTableRequest {
+    string name = 1;
+    string salt = 2;
+}
+
+message CreateTableResponse {
+    string name = 1;
+    int32 tag = 2;
+    string salt = 3;
+}

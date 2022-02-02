@@ -25,21 +25,18 @@ import com.husbylabs.warptables.packets.ServerHandshake;
 import com.husbylabs.warptables.providers.Provider;
 
 import java.util.Arrays;
-import java.util.UUID;
 
 /**
  * @author Noah Husby
  */
-public class WarpTableServer extends WarpTable {
-    protected WarpTableServer(Provider provider) {
+public class WTServer extends WTClient {
+    protected WTServer(Provider provider) {
         super(provider);
     }
 
     @Override
     public void start() {
-        uniqueId = UUID.randomUUID();
-        WarpTableAPI.getLogger().info("Starting WarpTable server [ID: " + uniqueId + "]");
-        openProvider();
+        WarpTablesAPI.getLogger().info("Starting WarpTable server");
     }
 
     @Override

@@ -17,3 +17,22 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE
  */
 
+package com.husbylabs.warptables;
+
+import com.husbylabs.warptables.providers.Provider;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+/**
+ * @author Noah Husby
+ */
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+public abstract class WarpTableInstance {
+    @Getter
+    protected final Provider provider;
+
+    public abstract void start();
+    public abstract void stop();
+    public abstract Table getTable(String table);
+}

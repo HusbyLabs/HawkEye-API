@@ -36,7 +36,7 @@ public final class WarpTableEntry {
         return id;
     }
 
-    public WarpTable getInstance() {
+    public WTClient getInstance() {
         return instance;
     }
 
@@ -99,6 +99,6 @@ public final class WarpTableEntry {
 
     }
 
-    private final WarpTable instance;
+    private final WTClient instance;
     private final int id;
 }

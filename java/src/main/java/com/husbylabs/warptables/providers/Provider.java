@@ -19,14 +19,12 @@
 
 package com.husbylabs.warptables.providers;
 
-import com.husbylabs.warptables.WarpTable;
+import com.husbylabs.warptables.WTClient;
 import lombok.Getter;
-
-import java.util.function.Consumer;
 
 public abstract class Provider {
     @Getter
-    private WarpTable instance;
+    private WTClient instance;
 
     public abstract void send(byte[] data);
 
@@ -40,7 +38,7 @@ public abstract class Provider {
 
     public abstract String getName();
 
-    public void init(WarpTable instance) {
+    public void init(WTClient instance) {
         this.instance = instance;
     }
 }

@@ -29,46 +29,71 @@ import lombok.RequiredArgsConstructor;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
+import java.util.TreeMap;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The WarpTables client for writing and reading data
  *
  * @author Noah Husby
  */
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class WarpTable {
-    @Getter
-    protected final Provider provider;
+public class WTClient extends WarpTableInstance {
 
-    @Getter
-    protected UUID uniqueId = new UUID(0L, 0L);
-
-    private Map<Integer, WarpTableEntry> fields = new HashMap<>();
+    private final Map<Integer, Table> tablesByTag = new HashMap<>();
+    private final Map<String, Integer> tableTagsByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private final Map<Integer, WarpTableEntry> fields = new HashMap<>();
     private Map<String, Integer> fieldTags = new HashMap<>();
 
     ScheduledFuture<?> providerConnectionThread = null;
 
+    protected WTClient(Provider provider) {
+        super(provider);
+    }
+
     /**
      * Start the WarpTable connection
      */
+    @Override
     public void start() {
-        WarpTableAPI.getLogger().info("Starting WarpTable client");
-        openProvider();
+        WarpTablesAPI.getLogger().info("Starting WarpTable client");
+        provider.init(this);
+        providerConnectionThread = Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+            if(provider.isConnected()) {
+                providerConnectionThread.cancel(false);
+                providerConnectionThread = null;
+            }
+            provider.open();
+        }, 0, 2, TimeUnit.SECONDS);
         ClientHandshake handshake = ClientHandshake.newBuilder()
                 .setProtocol(Constants.PROTO_VER)
                 .build();
         provider.send(PacketRegistry.encode(ClientHandshake.class, handshake.toByteArray()));
     }
 
-    protected void openProvider() {
-        provider.init(this);
-        WarpTableAPI.getLogger().info("Opening provider [" + provider.getName() + "]");
-        provider.open();
+    @Override
+    public void stop() {
+        WarpTablesAPI.getLogger().info("Stopping WarpTable client");
+        if(providerConnectionThread != null) {
+            providerConnectionThread.cancel(true);
+            providerConnectionThread = null;
+        }
+        provider.close();
     }
+
+    @Override
+    public Table getTable(String tableName) {
+        // Check server for table information
+        if(!tableTagsByName.containsKey(tableName)) {
+            int i = 0;
+            while(tablesByTag.containsKey(i)) i++;
+            Table table = new Table();
+
+        }
+        return null;
+    }
+
 
     public void setFieldInfo(FieldInfo info) {
 
