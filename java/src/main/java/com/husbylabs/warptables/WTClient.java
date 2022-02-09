@@ -23,17 +23,13 @@ import com.husbylabs.warptables.packets.ClientHandshake;
 import com.husbylabs.warptables.packets.HandshakeGrpc;
 import com.husbylabs.warptables.packets.ServerHandshake;
 import io.grpc.ConnectivityState;
-import io.grpc.Grpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import io.grpc.NameResolver;
 import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The WarpTables client for writing and reading data
@@ -46,6 +42,7 @@ public class WTClient extends WarpTableInstance {
     @Getter
     private boolean connected = false;
     private boolean autoConnect = false;
+    private Thread autoConnectThread;
 
     protected WTClient(InetSocketAddress address) {
         super(address);
@@ -62,47 +59,94 @@ public class WTClient extends WarpTableInstance {
         long timeout = System.currentTimeMillis() + 5000;
         // Attempt 5000ms blocking connection
         while (timeout > System.currentTimeMillis() && !connected) {
-            if(channel.getState(true) == ConnectivityState.READY) {
+            if (channel.getState(true) == ConnectivityState.READY) {
                 attemptHandshake();
             }
         }
-        if(connected) {
+        if (connected) {
             return;
         }
 
         // Error handling depending on autoConnect option
-        if(autoConnect) {
-            //TODO: Handle auto connect
+        if (autoConnect) {
+            handleAutoConnect();
         } else {
             throw new IOException("The WarpTables server is not accessible.");
         }
     }
 
     private void handleAutoConnect() {
-
+        if (autoConnectThread != null && autoConnectThread.isAlive()) {
+            return;
+        }
+        autoConnectThread = new Thread(() -> {
+            while (!connected) {
+                if (channel.getState(true) == ConnectivityState.READY) {
+                    attemptHandshake();
+                }
+            }
+        });
+        autoConnectThread.start();
     }
 
+    /**
+     * Attempts a client -> server handshake
+     */
     private void attemptHandshake() {
         HandshakeGrpc.HandshakeBlockingStub stub = HandshakeGrpc.newBlockingStub(channel);
         ClientHandshake clientHandshake = ClientHandshake.newBuilder()
                 .setProtocol(Constants.PROTO_VER)
                 .build();
         ServerHandshake serverHandshake = stub.initiateHandshake(clientHandshake);
-        if(serverHandshake.getSupported()) {
+        if (serverHandshake.getSupported()) {
             connected = true;
+            System.out.println("Connected!");
+            handleClientConnection();
         }
     }
 
+    private void handleClientConnection() {
+        channel.notifyWhenStateChanged(channel.getState(false), () -> {
+            System.out.println("State change: " + channel.getState(false));
+            if (channel.getState(false) != ConnectivityState.READY && connected) {
+                connected = false;
+                if (autoConnect) {
+                    handleAutoConnect();
+                }
+            }
+            handleClientConnection();
+        });
+    }
+
+    /**
+     * Enable the auto connect feature.
+     * The auto connect feature will attempt to keep the client and server connected as long as {@link #stop()} hasn't been called.
+     */
     public void enableAutoConnect() {
         autoConnect = true;
     }
 
+    /**
+     * Disable the auto connect feature.
+     */
     public void disableAutoConnect() {
         autoConnect = false;
     }
 
+    /**
+     * Blocks current thread until the client is connected
+     */
     public void awaitConnection() {
-        while (!connected) {}
+        while (!connected) {
+        }
+    }
+
+    public void awaitTermination() {
+        try {
+            channel.awaitTermination(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

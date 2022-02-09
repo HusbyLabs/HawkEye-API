@@ -31,6 +31,8 @@ import org.apache.logging.log4j.util.PropertiesUtil;
 import java.net.InetSocketAddress;
 
 /**
+ * A utility class for creating WarpTables instances
+ *
  * @author Noah Husby
  */
 @UtilityClass

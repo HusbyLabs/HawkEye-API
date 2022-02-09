@@ -19,7 +19,6 @@
 
 package com.husbylabs.warptables;
 
-import com.husbylabs.warptables.test.Test;
 import io.grpc.ManagedChannel;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
