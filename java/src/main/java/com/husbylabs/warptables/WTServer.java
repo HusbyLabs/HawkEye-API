@@ -19,24 +19,53 @@
 
 package com.husbylabs.warptables;
 
+import com.husbylabs.warptables.test.Test;
+import io.grpc.ManagedChannel;
+import io.grpc.Server;
+import io.grpc.ServerBuilder;
+
+import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Noah Husby
  */
 public class WTServer extends WarpTableInstance {
+
+    private final ServerListener listener;
+    private final Server server;
+
     protected WTServer(InetSocketAddress address) {
         super(address);
+        listener = new ServerListener(this);
+        ServerBuilder builder = ServerBuilder.forPort(address.getPort());
+        listener.listen(builder);
+        server = builder.build();
+        Runtime.getRuntime().addShutdownHook(new Thread(WTServer.this::stop));
     }
 
+
     @Override
-    public void start() {
+    public void start() throws IOException {
         WarpTablesAPI.getLogger().info("Starting WarpTable server");
+        server.start();
+        try {
+            server.awaitTermination();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void stop() {
-
+        if (server != null) {
+            try {
+                server.shutdown().awaitTermination(30, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace(System.err);
+            }
+        }
     }
 
     @Override
@@ -44,4 +73,9 @@ public class WTServer extends WarpTableInstance {
         return null;
     }
 
+    private static final class Listener {
+        public Listener(ManagedChannel channel) {
+
+        }
+    }
 }

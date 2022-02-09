@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-option java_package = "com.husbylabs.warptables.packets";
-option java_multiple_files = true;
-
-message ServerHandshake {
-    int32 protocol = 1;
-    bool compatible = 2;
-}

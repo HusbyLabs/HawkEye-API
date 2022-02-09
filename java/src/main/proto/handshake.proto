@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option java_package = "com.husbylabs.warptables.packets";
+option java_multiple_files = true;
+
+service Handshake {
+    rpc InitiateHandshake(ClientHandshake) returns (ServerHandshake);
+    rpc heartbeat(google.protobuf.Empty) returns (google.protobuf.Empty);
+}
+
+message ClientHandshake {
+    int32 protocol = 1;
+}
+
+message ServerHandshake {
+    int32 protocol = 1;
+    bool supported = 2;
+}

@@ -19,12 +19,21 @@
 
 package com.husbylabs.warptables;
 
+import com.husbylabs.warptables.packets.ClientHandshake;
+import com.husbylabs.warptables.packets.HandshakeGrpc;
+import com.husbylabs.warptables.packets.ServerHandshake;
+import io.grpc.ConnectivityState;
+import io.grpc.Grpc;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import io.grpc.NameResolver;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * The WarpTables client for writing and reading data
@@ -33,18 +42,67 @@ import java.util.Map;
  */
 public class WTClient extends WarpTableInstance {
 
-    private final Map<Integer, WarpTableEntry> fields = new HashMap<>();
-    private Map<String, Integer> fieldTags = new HashMap<>();
+    private final ManagedChannel channel;
+    @Getter
+    private boolean connected = false;
+    private boolean autoConnect = false;
 
     protected WTClient(InetSocketAddress address) {
         super(address);
+        channel = ManagedChannelBuilder.forAddress(address.getHostName(), address.getPort())
+                .usePlaintext()
+                .build();
     }
 
     /**
      * Start the WarpTable connection
      */
     @Override
-    public void start() {
+    public void start() throws IOException, InterruptedException {
+        long timeout = System.currentTimeMillis() + 5000;
+        // Attempt 5000ms blocking connection
+        while (timeout > System.currentTimeMillis() && !connected) {
+            if(channel.getState(true) == ConnectivityState.READY) {
+                attemptHandshake();
+            }
+        }
+        if(connected) {
+            return;
+        }
+
+        // Error handling depending on autoConnect option
+        if(autoConnect) {
+            //TODO: Handle auto connect
+        } else {
+            throw new IOException("The WarpTables server is not accessible.");
+        }
+    }
+
+    private void handleAutoConnect() {
+
+    }
+
+    private void attemptHandshake() {
+        HandshakeGrpc.HandshakeBlockingStub stub = HandshakeGrpc.newBlockingStub(channel);
+        ClientHandshake clientHandshake = ClientHandshake.newBuilder()
+                .setProtocol(Constants.PROTO_VER)
+                .build();
+        ServerHandshake serverHandshake = stub.initiateHandshake(clientHandshake);
+        if(serverHandshake.getSupported()) {
+            connected = true;
+        }
+    }
+
+    public void enableAutoConnect() {
+        autoConnect = true;
+    }
+
+    public void disableAutoConnect() {
+        autoConnect = false;
+    }
+
+    public void awaitConnection() {
+        while (!connected) {}
     }
 
     @Override
@@ -62,59 +120,5 @@ public class WTClient extends WarpTableInstance {
             }
         }
         return null;
-    }
-
-
-    public void setFieldInfo(FieldInfo info) {
-
-    }
-
-    public void setFieldsInfo(Collection<FieldInfo> info) {
-
-    }
-
-    /**
-     * Gets a {@link WarpTableEntry} by its registration id
-     *
-     * @param id The registration id
-     * @return {@link WarpTableEntry} if exists, null if not
-     */
-    public WarpTableEntry get(int id) {
-        return fields.get(id);
-    }
-
-    /**
-     * Gets a {@link WarpTableEntry} by its tag
-     *
-     * @param tag The tag
-     * @return {@link WarpTableEntry} if exists, otherwise a new entry will be created
-     */
-    public WarpTableEntry get(@NonNull String tag) {
-        if (!fieldTags.containsKey(tag)) {
-            WarpTableEntry entry = create();
-            fieldTags.put(tag, entry.getId());
-            return entry;
-        }
-        return get(fieldTags.get(tag));
-    }
-
-    public WarpTableEntry create() {
-        int id = fields.size();
-        while (fields.containsKey(id)) {
-            id++;
-        }
-        WarpTableEntry entry = new WarpTableEntry(this, id);
-        fields.put(id, entry);
-        return entry;
-    }
-
-
-    /**
-     * [Internal use only] Parses an incoming message
-     *
-     * @param data The incoming data
-     */
-    public void onMessage(byte[] data) {
-        PacketMetadata metadata = PacketRegistry.decode(data);
     }
 }
