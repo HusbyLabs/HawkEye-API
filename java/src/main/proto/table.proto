@@ -6,25 +6,20 @@ option java_package = "com.husbylabs.warptables.packets";
 option java_multiple_files = true;
 
 service Table {
-    rpc Create(CreateTable) returns (google.protobuf.Empty);
+    rpc Fetch(FetchTableRequest) returns (TableResponse);
+    rpc Subscribe(SubscribeTableRequest) returns (stream TableResponse);
 }
 
-message CreateTable {
+message FetchTableRequest {
+    int32 clientId = 1;
+    string name = 2;
+}
+
+message TableResponse {
     string name = 1;
+    int32 tableId = 2;
 }
 
-message CreateTableResponse {
-    string name = 1;
-    int32 tag = 2;
-    string salt = 3;
-}
-
-message UpdateTableRequest {
-    string name = 1;
-    int32 tag = 2;
-    string salt = 3;
-}
-
-message UpdateTableResponse {
-    string salt = 1;
+message SubscribeTableRequest {
+    int32 clientId = 1;
 }

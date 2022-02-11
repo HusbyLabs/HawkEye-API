@@ -19,12 +19,13 @@
 
 package com.husbylabs.warptables;
 
-import io.grpc.ManagedChannel;
+import com.google.common.collect.Maps;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -34,11 +35,12 @@ public class WTServer extends WarpTableInstance {
 
     private final ServerListener listener;
     private final Server server;
+    private final Map<Integer, Integer> clients = Maps.newHashMap();
 
     protected WTServer(InetSocketAddress address) {
         super(address);
         listener = new ServerListener(this);
-        ServerBuilder builder = ServerBuilder.forPort(address.getPort());
+        ServerBuilder<?> builder = ServerBuilder.forPort(address.getPort());
         listener.listen(builder);
         server = builder.build();
         Runtime.getRuntime().addShutdownHook(new Thread(WTServer.this::stop));
@@ -67,14 +69,24 @@ public class WTServer extends WarpTableInstance {
         }
     }
 
+    /**
+     * Creates a new client
+     *
+     * @param protocol The protocol version of the client
+     * @return The ID of the new client
+     */
+    protected int createNewClient(int protocol) {
+        int x = 0;
+        while (clients.containsKey(x)) {
+            x++;
+        }
+        clients.put(x, protocol);
+        return x;
+    }
+
     @Override
     public Table getTable(String table) {
         return null;
     }
 
-    private static final class Listener {
-        public Listener(ManagedChannel channel) {
-
-        }
-    }
 }

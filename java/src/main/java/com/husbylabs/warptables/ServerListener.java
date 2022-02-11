@@ -40,12 +40,16 @@ public class ServerListener {
         builder.addService(new HandshakeImpl());
     }
 
-    private static class HandshakeImpl extends HandshakeGrpc.HandshakeImplBase {
+    private class HandshakeImpl extends HandshakeGrpc.HandshakeImplBase {
         @Override
         public void initiateHandshake(ClientHandshake request, StreamObserver<ServerHandshake> responseObserver) {
+            int clientProtocolVersion = request.getProtocol();
+            boolean supported = Arrays.asList(Constants.COMPATIBLE_PROTOCOL_VERSIONS).contains(clientProtocolVersion);
+            int clientId = supported ? wtServer.createNewClient(clientProtocolVersion) : -1;
             ServerHandshake handshake = ServerHandshake.newBuilder()
                     .setProtocol(Constants.PROTO_VER)
-                    .setSupported(Arrays.asList(Constants.COMPATIBLE_PROTOCOL_VERSIONS).contains(Constants.PROTO_VER))
+                    .setSupported(supported)
+                    .setClientId(clientId)
                     .build();
             responseObserver.onNext(handshake);
             responseObserver.onCompleted();

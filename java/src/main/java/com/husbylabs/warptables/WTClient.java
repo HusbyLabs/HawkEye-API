@@ -42,7 +42,10 @@ public class WTClient extends WarpTableInstance {
     @Getter
     private boolean connected = false;
     private boolean autoConnect = false;
+    private boolean started = false;
     private Thread autoConnectThread;
+
+    private int clientId = -1;
 
     protected WTClient(InetSocketAddress address) {
         super(address);
@@ -57,6 +60,7 @@ public class WTClient extends WarpTableInstance {
     @Override
     public void start() throws IOException, InterruptedException {
         long timeout = System.currentTimeMillis() + 5000;
+        started = true;
         // Attempt 5000ms blocking connection
         while (timeout > System.currentTimeMillis() && !connected) {
             if (channel.getState(true) == ConnectivityState.READY) {
@@ -100,7 +104,8 @@ public class WTClient extends WarpTableInstance {
         ServerHandshake serverHandshake = stub.initiateHandshake(clientHandshake);
         if (serverHandshake.getSupported()) {
             connected = true;
-            System.out.println("Connected!");
+            clientId = serverHandshake.getClientId();
+            System.out.println("Connected w/ Client Id: " + clientId);
             handleClientConnection();
         }
     }
@@ -110,7 +115,7 @@ public class WTClient extends WarpTableInstance {
             System.out.println("State change: " + channel.getState(false));
             if (channel.getState(false) != ConnectivityState.READY && connected) {
                 connected = false;
-                if (autoConnect) {
+                if (autoConnect && started) {
                     handleAutoConnect();
                 }
             }
@@ -152,6 +157,9 @@ public class WTClient extends WarpTableInstance {
     @Override
     public void stop() {
         WarpTablesAPI.getLogger().info("Stopping WarpTable client");
+        autoConnectThread.interrupt();
+        autoConnectThread = null;
+        started = false;
     }
 
     @Override
