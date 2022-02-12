@@ -189,47 +189,57 @@ public class WTClient extends WarpTableInstance {
     private void registerStreamers() {
         TableGrpc.newStub(channel).subscribe(
                 SubscribeTableRequest.newBuilder().setClientId(clientId).build(),
-                new CallStreamObserver<TableResponse>() {
-                    @Override
-                    public boolean isReady() {
-                        return true;
-                    }
-
-                    @Override
-                    public void setOnReadyHandler(Runnable onReadyHandler) {
-
-                    }
-
-                    @Override
-                    public void disableAutoInboundFlowControl() {
-
-                    }
-
-                    @Override
-                    public void request(int count) {
-
-                    }
-
-                    @Override
-                    public void setMessageCompression(boolean enable) {
-
-                    }
-
-                    @Override
-                    public void onNext(TableResponse value) {
-                        System.out.printf("[Client: %s, Table Name: %s, Table ID: %s]\n", clientId, value.getName(), value.getTableId());
-                    }
-
-                    @Override
-                    public void onError(Throwable t) {
-
-                    }
-
-                    @Override
-                    public void onCompleted() {
-
-                    }
-                }
+                new TableResponseCallback()
         );
+    }
+
+    /*
+     * Callbacks
+     */
+
+    private abstract static class Callback<T> extends CallStreamObserver<T> {
+
+        @Override
+        public boolean isReady() {
+            return true;
+        }
+
+        @Override
+        public void setOnReadyHandler(Runnable onReadyHandler) {
+
+        }
+
+        @Override
+        public void disableAutoInboundFlowControl() {
+
+        }
+
+        @Override
+        public void request(int count) {
+
+        }
+
+        @Override
+        public void setMessageCompression(boolean enable) {
+
+        }
+    }
+
+    private class TableResponseCallback extends Callback<TableResponse> {
+
+        @Override
+        public void onNext(TableResponse value) {
+            System.out.printf("[Client: %s, Table Name: %s, Table ID: %s]\n", clientId, value.getName(), value.getTableId());
+        }
+
+        @Override
+        public void onError(Throwable t) {
+
+        }
+
+        @Override
+        public void onCompleted() {
+
+        }
     }
 }
