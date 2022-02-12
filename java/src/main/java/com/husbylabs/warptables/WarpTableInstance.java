@@ -36,12 +36,42 @@ public abstract class WarpTableInstance {
     @Getter
     protected final InetSocketAddress address;
 
-    protected final Map<Integer, Table> tablesByTag = new HashMap<>();
-    protected final Map<String, Integer> tableTagsByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    protected final Map<Integer, Table> tablesById = new HashMap<>();
+    protected final Map<String, Integer> tableIdByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public abstract void start() throws Exception;
 
     public abstract void stop();
 
+    /**
+     * Gets a table by its name. A new table will be created with that name if it doesn't exist.
+     *
+     * @param table The name of the table
+     * @return {@link Table}
+     */
     public abstract Table getTable(String table);
+
+    /**
+     * Gets a table by its unique id
+     *
+     * @param id The unique id of the table
+     * @return {@link Table} if exists, null if not
+     */
+    public Table getTable(int id) {
+        return tablesById.get(id);
+    }
+
+    /**
+     * Handles a new table assigment
+     *
+     * @param name Name of the table
+     * @param id   Id of the table
+     * @return {@link Table}
+     */
+    protected Table handleTable(String name, int id) {
+        Table table = new Table(id, name);
+        tablesById.put(id, table);
+        tableIdByName.put(name, id);
+        return table;
+    }
 }

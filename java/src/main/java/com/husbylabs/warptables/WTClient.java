@@ -20,11 +20,16 @@
 package com.husbylabs.warptables;
 
 import com.husbylabs.warptables.packets.ClientHandshake;
+import com.husbylabs.warptables.packets.FetchTableRequest;
 import com.husbylabs.warptables.packets.HandshakeGrpc;
 import com.husbylabs.warptables.packets.ServerHandshake;
+import com.husbylabs.warptables.packets.SubscribeTableRequest;
+import com.husbylabs.warptables.packets.TableGrpc;
+import com.husbylabs.warptables.packets.TableResponse;
 import io.grpc.ConnectivityState;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.stub.CallStreamObserver;
 import lombok.Getter;
 
 import java.io.IOException;
@@ -46,6 +51,9 @@ public class WTClient extends WarpTableInstance {
     private Thread autoConnectThread;
 
     private int clientId = -1;
+
+    private HandshakeGrpc.HandshakeBlockingStub handshakeStub;
+    private TableGrpc.TableBlockingStub tableStub;
 
     protected WTClient(InetSocketAddress address) {
         super(address);
@@ -97,16 +105,18 @@ public class WTClient extends WarpTableInstance {
      * Attempts a client -> server handshake
      */
     private void attemptHandshake() {
-        HandshakeGrpc.HandshakeBlockingStub stub = HandshakeGrpc.newBlockingStub(channel);
+        handshakeStub = HandshakeGrpc.newBlockingStub(channel);
         ClientHandshake clientHandshake = ClientHandshake.newBuilder()
                 .setProtocol(Constants.PROTO_VER)
                 .build();
-        ServerHandshake serverHandshake = stub.initiateHandshake(clientHandshake);
+        ServerHandshake serverHandshake = handshakeStub.initiateHandshake(clientHandshake);
         if (serverHandshake.getSupported()) {
             connected = true;
             clientId = serverHandshake.getClientId();
             System.out.println("Connected w/ Client Id: " + clientId);
+            tableStub = TableGrpc.newBlockingStub(channel);
             handleClientConnection();
+            new Thread(this::registerStreamers).start();
         }
     }
 
@@ -165,12 +175,61 @@ public class WTClient extends WarpTableInstance {
     @Override
     public Table getTable(String tableName) {
         // Check server for table information
-        if (!tableTagsByName.containsKey(tableName)) {
-            int i = 0;
-            while (tablesByTag.containsKey(i)) {
-                i++;
-            }
+        if (!tableIdByName.containsKey(tableName)) {
+            FetchTableRequest tableRequest = FetchTableRequest.newBuilder()
+                    .setClientId(clientId)
+                    .setName(tableName)
+                    .build();
+            TableResponse tableResponse = tableStub.fetch(tableRequest);
+            return handleTable(tableResponse.getName(), tableResponse.getTableId());
         }
-        return null;
+        return getTable(tableIdByName.get(tableName));
+    }
+
+    private void registerStreamers() {
+        TableGrpc.newStub(channel).subscribe(
+                SubscribeTableRequest.newBuilder().setClientId(clientId).build(),
+                new CallStreamObserver<TableResponse>() {
+                    @Override
+                    public boolean isReady() {
+                        return true;
+                    }
+
+                    @Override
+                    public void setOnReadyHandler(Runnable onReadyHandler) {
+
+                    }
+
+                    @Override
+                    public void disableAutoInboundFlowControl() {
+
+                    }
+
+                    @Override
+                    public void request(int count) {
+
+                    }
+
+                    @Override
+                    public void setMessageCompression(boolean enable) {
+
+                    }
+
+                    @Override
+                    public void onNext(TableResponse value) {
+                        System.out.printf("[Client: %s, Table Name: %s, Table ID: %s]\n", clientId, value.getName(), value.getTableId());
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+
+                    }
+
+                    @Override
+                    public void onCompleted() {
+
+                    }
+                }
+        );
     }
 }

@@ -19,8 +19,16 @@
 
 package com.husbylabs.warptables;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 /**
  * @author Noah Husby
  */
+@RequiredArgsConstructor
 public class Table {
+    @Getter
+    private final int id;
+    @Getter
+    private final String name;
 }

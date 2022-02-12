@@ -20,11 +20,21 @@
 package com.husbylabs.warptables;
 
 import com.google.common.collect.Maps;
+import com.google.protobuf.Empty;
+import com.husbylabs.warptables.packets.ClientHandshake;
+import com.husbylabs.warptables.packets.FetchTableRequest;
+import com.husbylabs.warptables.packets.HandshakeGrpc;
+import com.husbylabs.warptables.packets.ServerHandshake;
+import com.husbylabs.warptables.packets.SubscribeTableRequest;
+import com.husbylabs.warptables.packets.TableGrpc;
+import com.husbylabs.warptables.packets.TableResponse;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
+import io.grpc.stub.StreamObserver;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -33,15 +43,15 @@ import java.util.concurrent.TimeUnit;
  */
 public class WTServer extends WarpTableInstance {
 
-    private final ServerListener listener;
     private final Server server;
     private final Map<Integer, Integer> clients = Maps.newHashMap();
+    private final Map<Integer, StreamObserver<TableResponse>> tableStreamObservers = Maps.newHashMap();
 
     protected WTServer(InetSocketAddress address) {
         super(address);
-        listener = new ServerListener(this);
         ServerBuilder<?> builder = ServerBuilder.forPort(address.getPort());
-        listener.listen(builder);
+        builder.addService(new HandshakeImpl());
+        builder.addService(new TableImpl());
         server = builder.build();
         Runtime.getRuntime().addShutdownHook(new Thread(WTServer.this::stop));
     }
@@ -85,8 +95,87 @@ public class WTServer extends WarpTableInstance {
     }
 
     @Override
-    public Table getTable(String table) {
-        return null;
+    public Table getTable(String name) {
+        if (tableIdByName.containsKey(name)) {
+            return getTable(tableIdByName.get(name));
+        } else {
+            int x = 0;
+            while (tablesById.containsKey(x)) {
+                x++;
+            }
+            Table table = new Table(x, name);
+            tablesById.put(x, table);
+            tableIdByName.put(name, x);
+            return table;
+        }
     }
 
+    private TableResponse createClientTable(FetchTableRequest request) {
+        Table table = getTable(request.getName());
+        TableResponse response = TableResponse.newBuilder()
+                .setName(table.getName())
+                .setTableId(table.getId())
+                .build();
+        tableStreamObservers.entrySet()
+                .stream()
+                .filter(e -> e.getKey() != request.getClientId())
+                .forEach(e -> e.getValue().onNext(response));
+        return response;
+    }
+
+    /*
+     * Packet Handlers
+     */
+    private class HandshakeImpl extends HandshakeGrpc.HandshakeImplBase {
+        @Override
+        public void initiateHandshake(ClientHandshake request, StreamObserver<ServerHandshake> responseObserver) {
+            int clientProtocolVersion = request.getProtocol();
+            boolean supported = Arrays.asList(Constants.COMPATIBLE_PROTOCOL_VERSIONS).contains(clientProtocolVersion);
+            int clientId = supported ? createNewClient(clientProtocolVersion) : -1;
+            ServerHandshake handshake = ServerHandshake.newBuilder()
+                    .setProtocol(Constants.PROTO_VER)
+                    .setSupported(supported)
+                    .setClientId(clientId)
+                    .build();
+            responseObserver.onNext(handshake);
+            responseObserver.onCompleted();
+        }
+
+        @Override
+        public void heartbeat(Empty request, StreamObserver<Empty> responseObserver) {
+            responseObserver.onNext(Empty.newBuilder().build());
+            responseObserver.onCompleted();
+        }
+    }
+
+    private class TableImpl extends TableGrpc.TableImplBase {
+        @Override
+        public void fetch(FetchTableRequest request, StreamObserver<TableResponse> responseObserver) {
+            TableResponse response;
+            if (tableIdByName.containsKey(request.getName())) {
+                Table table = getTable(request.getName());
+                response = TableResponse.newBuilder()
+                        .setName(table.getName())
+                        .setTableId(table.getId())
+                        .build();
+            } else {
+                response = createClientTable(request);
+            }
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+        }
+
+        @Override
+        public void subscribe(SubscribeTableRequest request, StreamObserver<TableResponse> responseObserver) {
+            // Send all current tables on subscribe
+            for (Map.Entry<String, Integer> entry : tableIdByName.entrySet()) {
+                TableResponse response = TableResponse.newBuilder()
+                        .setName(entry.getKey())
+                        .setTableId(entry.getValue())
+                        .build();
+                responseObserver.onNext(response);
+            }
+            tableStreamObservers.put(request.getClientId(), responseObserver);
+        }
+    }
 }
