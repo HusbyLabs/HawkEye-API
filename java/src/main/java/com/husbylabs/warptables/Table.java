@@ -19,16 +19,48 @@
 
 package com.husbylabs.warptables;
 
+import com.google.common.collect.Maps;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * @author Noah Husby
  */
 @RequiredArgsConstructor
 public class Table {
+    protected final Map<Integer, Field> fields = Maps.newHashMap();
+    protected final Map<String, Integer> fieldsByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     @Getter
     private final int id;
     @Getter
     private final String name;
+    @Getter
+    private final WarpTableInstance instance;
+
+    /**
+     * Get a {@link Field} by its name.
+     * A new field will be generated if one by its name does not exist.
+     *
+     * @param name Name of field
+     * @return {@link Field}
+     */
+    public Field getField(String name) {
+        if (fieldsByName.containsKey(name)) {
+            return getField(fieldsByName.get(name));
+        }
+        return instance.getField(id, name);
+    }
+
+    /**
+     * Get a {@link Field} by its id.
+     *
+     * @param id Id of field
+     * @return {@link Field}
+     */
+    public Field getField(int id) {
+        return fields.get(id);
+    }
 }

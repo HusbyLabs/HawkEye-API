@@ -36,8 +36,8 @@ public abstract class WarpTableInstance {
     @Getter
     protected final InetSocketAddress address;
 
-    protected final Map<Integer, Table> tablesById = new HashMap<>();
-    protected final Map<String, Integer> tableIdByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    protected final Map<Integer, Table> tables = new HashMap<>();
+    protected final Map<String, Integer> tablesByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public abstract void start() throws Exception;
 
@@ -58,7 +58,7 @@ public abstract class WarpTableInstance {
      * @return {@link Table} if exists, null if not
      */
     public Table getTable(int id) {
-        return tablesById.get(id);
+        return tables.get(id);
     }
 
     /**
@@ -69,9 +69,15 @@ public abstract class WarpTableInstance {
      * @return {@link Table}
      */
     protected Table handleTable(String name, int id) {
-        Table table = new Table(id, name);
-        tablesById.put(id, table);
-        tableIdByName.put(name, id);
-        return table;
+        Table table = new Table(id, name, this);
+        tables.put(id, table);
+        tablesByName.put(name, id);
+        return tables.get(id);
     }
+
+    public abstract Field getField(int tableId, int fieldId);
+
+    public abstract Field getField(int tableId, String name);
+
+    public abstract void postField(Field field);
 }
