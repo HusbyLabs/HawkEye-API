@@ -1,7 +1,0 @@
-syntax = "proto3";
-
-option java_package = "com.husbylabs.hawkeye.test";
-
-message ClientHandshake {
-    int32 protocol = 1;
-}
