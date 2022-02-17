@@ -6,26 +6,18 @@ option java_package = "com.husbylabs.warptables.packets";
 option java_multiple_files = true;
 
 service Field {
-    rpc FetchField(FetchFieldRequest) returns (FieldResponse);
-    rpc FetchFieldById(FetchFieldIdRequest) returns (FieldResponse);
+    rpc Fetch(FetchRequest) returns (FieldResponse);
     rpc Post(FieldUpdatePost) returns (google.protobuf.Empty);
     rpc Subscribe(SubscribeFieldRequest) returns (stream FieldUpdate);
 }
 
-message FetchFieldRequest {
-    string name = 1;
-    int32 tableId = 2;
-}
-
-message FetchFieldIdRequest {
-    int32 fieldId = 1;
-    int32 tableId = 2;
+message FetchRequest {
+    string path = 1;
 }
 
 message FieldResponse {
-    string name = 1;
-    int32 fieldId = 2;
-    int32 tableId = 3;
+    string path = 1;
+    int32 handle = 2;
 }
 
 message FieldUpdatePost {
@@ -34,8 +26,7 @@ message FieldUpdatePost {
 }
 
 message FieldUpdate {
-    int32 fieldId = 1;
-    int32 tableId = 2;
+    int32 handle = 1;
     enum Type {
         BOOL = 0;
         NUMBER = 1;
@@ -44,8 +35,8 @@ message FieldUpdate {
         NUMBER_ARRAY = 4;
         STRING_ARRAY = 5;
     }
-    Type type = 3;
-    repeated string value = 4;
+    Type type = 2;
+    repeated string value = 3;
 }
 
 message SubscribeFieldRequest {

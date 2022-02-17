@@ -35,8 +35,8 @@ import java.util.Arrays;
 @Getter
 public class Field {
 
-    private final int id;
-    private final String name;
+    private final int handle;
+    private final String base;
     private final Table table;
     private Type type = Type.STRING;
     private Object value = null;
@@ -118,6 +118,10 @@ public class Field {
         }
         this.type = type;
         return value;
+    }
+
+    public String getPath() {
+        return table.getPath() + "/" + base;
     }
 
     public Object getValue() {

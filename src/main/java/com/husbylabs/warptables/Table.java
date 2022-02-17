@@ -19,26 +19,42 @@
 
 package com.husbylabs.warptables;
 
-import com.google.common.collect.Maps;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Noah Husby
  */
 @RequiredArgsConstructor
 public class Table {
-    protected final Map<Integer, Field> fields = Maps.newHashMap();
-    protected final Map<String, Integer> fieldsByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    @Getter
-    private final int id;
-    @Getter
-    private final String name;
+    protected final Map<String, Field> fields = new ConcurrentHashMap<>();
     @Getter
     private final WarpTableInstance instance;
+    @Getter
+    private final String path;
+
+    /**
+     * Gets a sub-table with the path of the current table as root
+     *
+     * @param path Path of the sub-table
+     * @return The sub-table
+     */
+    public Table getTable(String path) {
+        return instance.getTable(this.path + "/" + path);
+    }
+
+    /**
+     * Checks if the field exists in the table\
+     *
+     * @param name Name of field
+     * @return True if exists, false if not
+     */
+    public boolean hasField(String name) {
+        return fields.containsKey(name);
+    }
 
     /**
      * Get a {@link Field} by its name.
@@ -48,10 +64,10 @@ public class Table {
      * @return {@link Field}
      */
     public Field getField(String name) {
-        if (fieldsByName.containsKey(name)) {
-            return getField(fieldsByName.get(name));
+        if (hasField(name)) {
+            return fields.get(name);
         }
-        return instance.getField(id, name);
+        return instance.getField(getPath() + "/" + name);
     }
 
     /**

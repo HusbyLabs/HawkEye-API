@@ -24,9 +24,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.net.InetSocketAddress;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Noah Husby
@@ -36,8 +35,26 @@ public abstract class WarpTableInstance {
     @Getter
     protected final InetSocketAddress address;
 
-    protected final Map<Integer, Table> tables = new HashMap<>();
-    protected final Map<String, Integer> tablesByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    protected final Map<Integer, String> fields = new ConcurrentHashMap<>();
+    protected final Map<String, Table> tables = new ConcurrentHashMap<>();
+
+    public static String normalizePath(String path, boolean leadingSlash) {
+        String normalized = leadingSlash ? "/" + path : path;
+        normalized = normalized.replaceAll("/{2,}", "/");
+        if (!leadingSlash && normalized.charAt(0) == '/') {
+            normalized = normalized.substring(1);
+        }
+        return normalized;
+    }
+
+    public static String basePath(String path) {
+        final int slash = path.lastIndexOf("/");
+        return slash == -1 ? path : path.substring(slash + 1);
+    }
+
+    public static String normalizePath(String path) {
+        return normalizePath(path, true);
+    }
 
     public abstract void start() throws Exception;
 
@@ -46,38 +63,16 @@ public abstract class WarpTableInstance {
     /**
      * Gets a table by its name. A new table will be created with that name if it doesn't exist.
      *
-     * @param table The name of the table
+     * @param path The path of the table
      * @return {@link Table}
      */
-    public abstract Table getTable(String table);
-
-    /**
-     * Gets a table by its unique id
-     *
-     * @param id The unique id of the table
-     * @return {@link Table} if exists, null if not
-     */
-    public Table getTable(int id) {
-        return tables.get(id);
+    public Table getTable(String path) {
+        path = normalizePath(path);
+        tables.putIfAbsent(path, new Table(this, path));
+        return tables.get(path);
     }
 
-    /**
-     * Handles a new table assigment
-     *
-     * @param name Name of the table
-     * @param id   Id of the table
-     * @return {@link Table}
-     */
-    protected Table handleTable(String name, int id) {
-        Table table = new Table(id, name, this);
-        tables.put(id, table);
-        tablesByName.put(name, id);
-        return tables.get(id);
-    }
-
-    public abstract Field getField(int tableId, int fieldId);
-
-    public abstract Field getField(int tableId, String name);
+    public abstract Field getField(String path);
 
     public abstract void postField(Field field);
 }

@@ -22,9 +22,7 @@ package com.husbylabs.warptables;
 import com.google.common.collect.Maps;
 import com.google.protobuf.Empty;
 import com.husbylabs.warptables.packets.ClientHandshake;
-import com.husbylabs.warptables.packets.FetchFieldIdRequest;
-import com.husbylabs.warptables.packets.FetchFieldRequest;
-import com.husbylabs.warptables.packets.FetchTableRequest;
+import com.husbylabs.warptables.packets.FetchRequest;
 import com.husbylabs.warptables.packets.FieldGrpc;
 import com.husbylabs.warptables.packets.FieldResponse;
 import com.husbylabs.warptables.packets.FieldUpdate;
@@ -32,9 +30,6 @@ import com.husbylabs.warptables.packets.FieldUpdatePost;
 import com.husbylabs.warptables.packets.HandshakeGrpc;
 import com.husbylabs.warptables.packets.ServerHandshake;
 import com.husbylabs.warptables.packets.SubscribeFieldRequest;
-import com.husbylabs.warptables.packets.SubscribeTableRequest;
-import com.husbylabs.warptables.packets.TableGrpc;
-import com.husbylabs.warptables.packets.TableResponse;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.ServerCallStreamObserver;
@@ -54,14 +49,12 @@ public class WTServer extends WarpTableInstance {
 
     private final Server server;
     private final Map<Integer, Integer> clients = Maps.newHashMap();
-    private final Map<Integer, StreamObserver<TableResponse>> tableStreamObservers = Maps.newHashMap();
     private final Map<Integer, StreamObserver<FieldUpdate>> fieldStreamObservers = Maps.newHashMap();
 
     protected WTServer(InetSocketAddress address) {
         super(address);
         ServerBuilder<?> builder = ServerBuilder.forPort(address.getPort());
         builder.addService(new HandshakeImpl());
-        builder.addService(new TableImpl());
         builder.addService(new FieldImpl());
         server = builder.build();
         Runtime.getRuntime().addShutdownHook(new Thread(WTServer.this::stop));
@@ -106,70 +99,36 @@ public class WTServer extends WarpTableInstance {
     }
 
     @Override
-    public Table getTable(String name) {
-        return getTable(name, -1);
-    }
-
-    /**
-     * Gets a {@link Table} from the name. It will create a table if it does not exist.
-     *
-     * @param name     Name of table
-     * @param clientId Id of client
-     * @return {@link Table}
-     */
-    private Table getTable(String name, int clientId) {
-        if (tablesByName.containsKey(name)) {
-            return getTable(tablesByName.get(name));
+    public Field getField(String path) {
+        path = normalizePath(path, false);
+        String leadingPath = "/" + path;
+        String base = basePath(leadingPath);
+        if (!path.contains("/")) {
+            // TODO: Throw no root vars
+        }
+        String[] parts = path.split("/");
+        Table parentTable = null;
+        if (parts.length == 2) {
+            parentTable = getTable(parts[0]);
         } else {
-            int x = 0;
-            while (tables.containsKey(x)) {
-                x++;
+            for (int i = 0; i < parts.length - 1; i++) {
+                if (parentTable == null) {
+                    parentTable = getTable(parts[i]);
+                } else {
+                    parentTable = parentTable.getTable(parts[i]);
+                }
             }
-            Table table = new Table(x, name, this);
-            tables.put(x, table);
-            tablesByName.put(name, x);
-            if (clientId != -1) {
-                TableResponse response = TableResponse.newBuilder()
-                        .setName(table.getName())
-                        .setTableId(table.getId())
-                        .build();
-                tableStreamObservers.entrySet()
-                        .stream()
-                        .filter(e -> e.getKey() != clientId)
-                        .forEach(e -> e.getValue().onNext(response));
-            }
-            return table;
         }
-    }
-
-    @Override
-    public Field getField(int tableId, int fieldId) {
-        Table table = getTable(tableId);
-        if (table == null) {
-            return null;
+        if (parentTable.hasField(base)) {
+            return parentTable.getField(base);
         }
-        return table.getField(fieldId);
-    }
-
-    @Override
-    public Field getField(int tableId, String name) {
-        Table table = getTable(tableId);
-        if (table == null) {
-            return null;
+        int handle = 0;
+        while (fields.containsKey(handle)) {
+            handle++;
         }
-        Field field;
-        if (table.fieldsByName.containsKey(name)) {
-            field = table.getField(table.fieldsByName.get(name));
-        } else {
-            int x = 0;
-            while (table.fields.containsKey(x)) {
-                x++;
-            }
-            field = new Field(x, name, table);
-            table.fields.put(x, field);
-            table.fieldsByName.put(name, x);
-        }
-        return field;
+        fields.put(handle, leadingPath);
+        parentTable.fields.put(base, new Field(handle, base, parentTable));
+        return parentTable.fields.get(base);
     }
 
     @Override
@@ -186,8 +145,7 @@ public class WTServer extends WarpTableInstance {
             values.add(String.valueOf(field.getValue()));
         }
         FieldUpdate.Builder builder = FieldUpdate.newBuilder()
-                .setTableId(field.getTable().getId())
-                .setFieldId(field.getId())
+                .setHandle(field.getHandle())
                 .setType(field.getType());
         values.forEach(builder::addValue);
         FieldUpdate payload = builder.build();
@@ -195,7 +153,6 @@ public class WTServer extends WarpTableInstance {
                 .stream()
                 .filter(e -> e.getKey() != clientId)
                 .forEach(e -> e.getValue().onNext(payload));
-
     }
 
     /*
@@ -228,55 +185,13 @@ public class WTServer extends WarpTableInstance {
         }
     }
 
-    private class TableImpl extends TableGrpc.TableImplBase {
-        @Override
-        public void fetch(FetchTableRequest request, StreamObserver<TableResponse> responseObserver) {
-            Table table = getTable(request.getName(), request.getClientId());
-            TableResponse response = TableResponse.newBuilder()
-                    .setName(table.getName())
-                    .setTableId(table.getId())
-                    .build();
-            responseObserver.onNext(response);
-            responseObserver.onCompleted();
-        }
-
-        @Override
-        public void subscribe(SubscribeTableRequest request, StreamObserver<TableResponse> responseObserver) {
-            // Send all current tables on subscribe
-            for (Map.Entry<String, Integer> entry : tablesByName.entrySet()) {
-                TableResponse response = TableResponse.newBuilder()
-                        .setName(entry.getKey())
-                        .setTableId(entry.getValue())
-                        .build();
-                responseObserver.onNext(response);
-            }
-            tableStreamObservers.put(request.getClientId(), responseObserver);
-            ((ServerCallStreamObserver<TableResponse>) responseObserver).setOnCancelHandler(() -> unregisterSubscription(tableStreamObservers, request.getClientId()));
-        }
-    }
-
     private class FieldImpl extends FieldGrpc.FieldImplBase {
         @Override
-        public void fetchField(FetchFieldRequest request, StreamObserver<FieldResponse> responseObserver) {
-            Field field = getField(request.getTableId(), request.getName());
+        public void fetch(FetchRequest request, StreamObserver<FieldResponse> responseObserver) {
+            Field field = getField(request.getPath());
             FieldResponse response = FieldResponse.newBuilder()
-                    .setFieldId(field.getId())
-                    .setName(field.getName())
-                    .build();
-            responseObserver.onNext(response);
-            responseObserver.onCompleted();
-        }
-
-        @Override
-        public void fetchFieldById(FetchFieldIdRequest request, StreamObserver<FieldResponse> responseObserver) {
-            Field field = getField(request.getTableId(), request.getFieldId());
-            if (field == null) {
-                field = new Field(-1, "", null);
-            }
-            FieldResponse response = FieldResponse.newBuilder()
-                    .setName(field.getName())
-                    .setTableId(request.getTableId())
-                    .setFieldId(field.getId())
+                    .setHandle(field.getHandle())
+                    .setPath(field.getPath())
                     .build();
             responseObserver.onNext(response);
             responseObserver.onCompleted();
@@ -285,7 +200,7 @@ public class WTServer extends WarpTableInstance {
         @Override
         public void post(FieldUpdatePost request, StreamObserver<Empty> responseObserver) {
             FieldUpdate update = request.getUpdate();
-            Field field = getField(update.getTableId(), update.getFieldId());
+            Field field = getField(fields.get(update.getHandle()));
             String[] values = new String[update.getValueCount()];
             for (int i = 0; i < values.length; i++) {
                 values[i] = update.getValue(i);
