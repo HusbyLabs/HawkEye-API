@@ -199,16 +199,18 @@ public class WTServer extends WarpTableInstance {
 
         @Override
         public void post(FieldUpdatePost request, StreamObserver<Empty> responseObserver) {
-            FieldUpdate update = request.getUpdate();
-            Field field = getField(fields.get(update.getHandle()));
-            String[] values = new String[update.getValueCount()];
-            for (int i = 0; i < values.length; i++) {
-                values[i] = update.getValue(i);
+            synchronized (WTServer.this) {
+                FieldUpdate update = request.getUpdate();
+                Field field = getField(fields.get(update.getHandle()));
+                String[] values = new String[update.getValueCount()];
+                for (int i = 0; i < values.length; i++) {
+                    values[i] = update.getValue(i);
+                }
+                field.setValue(update.getType(), values);
+                responseObserver.onNext(Empty.newBuilder().build());
+                responseObserver.onCompleted();
+                postField(field, request.getClientId());
             }
-            field.setValue(update.getType(), values);
-            responseObserver.onNext(Empty.newBuilder().build());
-            responseObserver.onCompleted();
-            postField(field, request.getClientId());
         }
 
         @Override
