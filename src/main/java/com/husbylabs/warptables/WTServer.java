@@ -180,7 +180,7 @@ public class WTServer extends WarpTableInstance {
 
         @Override
         public void heartbeat(Empty request, StreamObserver<Empty> responseObserver) {
-            responseObserver.onNext(Empty.newBuilder().build());
+            responseObserver.onNext(Constants.EMPTY);
             responseObserver.onCompleted();
         }
     }
@@ -207,7 +207,7 @@ public class WTServer extends WarpTableInstance {
                     values[i] = update.getValue(i);
                 }
                 field.setValue(update.getType(), values);
-                responseObserver.onNext(Empty.newBuilder().build());
+                responseObserver.onNext(Constants.EMPTY);
                 responseObserver.onCompleted();
                 postField(field, request.getClientId());
             }
