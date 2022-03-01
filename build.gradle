@@ -13,6 +13,8 @@ apply plugin: "com.google.protobuf"
 apply plugin: "maven-publish"
 
 ext {
+    semVersion = "0.0.1"
+    fullVersion = semVersion + "+" + ('git rev-list --count HEAD'.execute().text.trim())
     nettyVersion = "4.1.74.Final"
     lombokVersion = "1.18.22"
     protobufVersion = "3.19.4"
@@ -22,7 +24,7 @@ ext {
 }
 
 group 'com.husbylabs'
-version '1.0'
+version "$fullVersion"
 
 repositories {
     mavenCentral()
@@ -46,6 +48,32 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 }
+
+publishing {
+    repositories {
+        if (System.getenv("MAVEN_USERNAME") != null && System.getenv("MAVEN_PASSWORD")) {
+            maven {
+                credentials {
+                    username = System.getenv("MAVEN_USERNAME")
+                    password = System.getenv("MAVEN_PASSWORD")
+                }
+                name = "HusbyLib"
+                url = "https://maven.husbylabs.com/releases"
+            }
+        }
+    }
+
+    publications {
+        maven(MavenPublication) {
+            groupId = "com.husbylib"
+            artifactId = "warptables"
+            version = project.version
+
+            from components.java
+        }
+    }
+}
+
 
 test {
     useJUnitPlatform()

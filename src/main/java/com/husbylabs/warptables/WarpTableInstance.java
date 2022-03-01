@@ -38,6 +38,15 @@ public abstract class WarpTableInstance {
     protected final Map<Integer, String> fields = new ConcurrentHashMap<>();
     protected final Map<String, Table> tables = new ConcurrentHashMap<>();
 
+    /**
+     * Normalizes a child path. Examples
+     * normalizePath("//foo/bar//child", true) = /foo/bar/child
+     * normalizePath("//foo/bar//child", false) = foo/bar/child
+     *
+     * @param path         The path to normalize
+     * @param leadingSlash Whether a leading slash should be added to the beginning of the path
+     * @return The normalized path
+     */
     public static String normalizePath(String path, boolean leadingSlash) {
         String normalized = leadingSlash ? "/" + path : path;
         normalized = normalized.replaceAll("/{2,}", "/");
@@ -47,17 +56,42 @@ public abstract class WarpTableInstance {
         return normalized;
     }
 
+    /**
+     * Normalizes a child path with a leading slash. Examples:
+     * normalizePath("foo//bar/child") = /foo/bar/child
+     *
+     * @param path The path to normalize
+     * @return The normalized path
+     */
+    public static String normalizePath(String path) {
+        return normalizePath(path, true);
+    }
+
+    /**
+     * Gets the base identity of a path. Examples:
+     * basePath("/foo/bar/child") = "child"
+     *
+     * @param path The path
+     * @return The base of the path
+     */
     public static String basePath(String path) {
         final int slash = path.lastIndexOf("/");
         return slash == -1 ? path : path.substring(slash + 1);
     }
 
-    public static String normalizePath(String path) {
-        return normalizePath(path, true);
-    }
-
+    /**
+     * Start the server / client
+     * This method will block and throw an exception on the client if the server isn't available.
+     * If the client has enableAutoConnect() called, then the client will continuously attempt to connect
+     * to the server in the background.
+     *
+     * @throws Exception if the server / client cannot start.
+     */
     public abstract void start() throws Exception;
 
+    /**
+     * Stop the server / client
+     */
     public abstract void stop();
 
     /**
