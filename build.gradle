@@ -65,7 +65,7 @@ publishing {
 
     publications {
         maven(MavenPublication) {
-            groupId = "com.husbylib"
+            groupId = "com.husbylabs"
             artifactId = "warptables"
             version = project.version
 
