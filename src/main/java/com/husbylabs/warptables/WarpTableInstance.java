@@ -38,6 +38,9 @@ public abstract class WarpTableInstance {
     protected final Map<Integer, String> fields = new ConcurrentHashMap<>();
     protected final Map<String, Table> tables = new ConcurrentHashMap<>();
 
+    private double periodicRate = 0.01;
+    private boolean overridePeriodicData = false;
+
     /**
      * Normalizes a child path. Examples
      * normalizePath("//foo/bar//child", true) = /foo/bar/child
@@ -54,6 +57,24 @@ public abstract class WarpTableInstance {
             normalized = normalized.substring(1);
         }
         return normalized;
+    }
+
+    /**
+     * Set the periodic rate of the instance. This is how frequent the data should be sent.
+     *
+     * @param interval The interval rate in seconds. Range: 00.1 - 1.0
+     */
+    public void setUpdateRate(double interval) {
+        this.periodicRate = interval;
+    }
+
+    /**
+     * Sets whether repeated entries should be overridden on each periodic loop
+     *
+     * @param override True to override, false to not
+     */
+    public void setOverridePeriodicData(boolean override) {
+        this.overridePeriodicData = override;
     }
 
     /**

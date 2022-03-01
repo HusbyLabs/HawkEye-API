@@ -220,22 +220,25 @@ public class WTClient extends WarpTableInstance {
 
     @Override
     public void postField(Field field) {
-        ArrayList<String> values = new ArrayList<>();
-        if (field.getType().name().contains("ARRAY")) {
-            Object[] arr = (Object[]) field.getValue();
-            Arrays.stream(arr).forEach(o -> values.add(String.valueOf(o)));
-        } else {
-            values.add(String.valueOf(field.getValue()));
-        }
-        FieldUpdate.Builder builder = FieldUpdate.newBuilder()
-                .setHandle(field.getHandle())
-                .setType(field.getType());
-        values.forEach(builder::addValue);
-        FieldUpdatePost payload = FieldUpdatePost.newBuilder()
-                .setUpdate(builder.build())
-                .setClientId(clientId)
-                .build();
-        fieldStub.post(payload);
+        new Thread(() -> {
+            ArrayList<String> values = new ArrayList<>();
+            if (field.getType().name().contains("ARRAY")) {
+                Object[] arr = (Object[]) field.getValue();
+                Arrays.stream(arr).forEach(o -> values.add(String.valueOf(o)));
+            } else {
+                values.add(String.valueOf(field.getValue()));
+            }
+            FieldUpdate.Builder builder = FieldUpdate.newBuilder()
+                    .setHandle(field.getHandle())
+                    .setType(field.getType());
+            values.forEach(builder::addValue);
+            FieldUpdatePost payload = FieldUpdatePost.newBuilder()
+                    .setUpdate(builder.build())
+                    .setClientId(clientId)
+                    .build();
+            fieldStub.post(payload);
+
+        }).start();
     }
 
     private void registerStreamers() {

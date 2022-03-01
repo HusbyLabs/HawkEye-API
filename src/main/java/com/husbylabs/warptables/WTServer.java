@@ -40,6 +40,7 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -48,7 +49,7 @@ import java.util.concurrent.TimeUnit;
 public class WTServer extends WarpTableInstance {
 
     private final Server server;
-    private final Map<Integer, Integer> clients = Maps.newHashMap();
+    private final Map<Integer, Integer> clients = new ConcurrentHashMap<>();
     private final Map<Integer, StreamObserver<FieldUpdate>> fieldStreamObservers = Maps.newHashMap();
 
     protected WTServer(InetSocketAddress address) {
@@ -62,14 +63,10 @@ public class WTServer extends WarpTableInstance {
 
 
     @Override
-    public void start() throws IOException {
+    public void start() throws IOException, InterruptedException {
         WarpTablesAPI.getLogger().info("Starting WarpTable server");
         server.start();
-        try {
-            server.awaitTermination();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        server.awaitTermination();
     }
 
     @Override
@@ -81,6 +78,15 @@ public class WTServer extends WarpTableInstance {
                 e.printStackTrace(System.err);
             }
         }
+    }
+
+    /**
+     * Blocks util program is terminated
+     *
+     * @throws InterruptedException
+     */
+    public void awaitTermination() throws InterruptedException {
+        server.awaitTermination();
     }
 
     /**
