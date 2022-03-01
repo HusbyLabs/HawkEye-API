@@ -38,7 +38,9 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 /**
  * The WarpTables client for writing and reading data
@@ -58,6 +60,8 @@ public class WTClient extends WarpTableInstance {
 
     private HandshakeGrpc.HandshakeBlockingStub handshakeStub;
     private FieldGrpc.FieldBlockingStub fieldStub;
+
+    private final List<Consumer<ConnectivityState>> connectivityStateEvents = new ArrayList<>();
 
     protected WTClient(InetSocketAddress address) {
         super(address);
@@ -126,8 +130,9 @@ public class WTClient extends WarpTableInstance {
 
     private void handleClientConnection() {
         channel.notifyWhenStateChanged(channel.getState(false), () -> {
-            System.out.println("State change: " + channel.getState(false));
-            if (channel.getState(false) != ConnectivityState.READY && connected) {
+            ConnectivityState state = channel.getState(false);
+            connectivityStateEvents.forEach(connectivityStateConsumer -> connectivityStateConsumer.accept(state));
+            if (state != ConnectivityState.READY && connected) {
                 connected = false;
                 if (autoConnect && started) {
                     handleAutoConnect();
@@ -166,6 +171,10 @@ public class WTClient extends WarpTableInstance {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public void onConnectivityStateChange(Consumer<ConnectivityState> state) {
+        connectivityStateEvents.add(state);
     }
 
     @Override
