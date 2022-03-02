@@ -8,7 +8,7 @@ buildscript {
 }
 
 apply plugin: "idea"
-apply plugin: "java"
+apply plugin: "java-library"
 apply plugin: "com.google.protobuf"
 apply plugin: "maven-publish"
 
@@ -33,20 +33,15 @@ repositories {
 dependencies {
 
     implementation "org.apache.logging.log4j:log4j-core:$log4jVersion"
-    implementation "io.netty:netty-buffer:$nettyVersion"
-    implementation "com.google.protobuf:protobuf-java:$protobufVersion"
+    api "io.netty:netty-buffer:$nettyVersion"
+    api "com.google.protobuf:protobuf-java:$protobufVersion"
     runtimeOnly "io.grpc:grpc-netty-shaded:$grpcVersion"
-    implementation "io.grpc:grpc-protobuf:$grpcVersion"
-    implementation "io.grpc:grpc-stub:$grpcVersion"
-    implementation "javax.annotation:javax.annotation-api:$javaxVersion"
+    api "io.grpc:grpc-protobuf:$grpcVersion"
+    api "io.grpc:grpc-stub:$grpcVersion"
+    api "javax.annotation:javax.annotation-api:$javaxVersion"
 
     compileOnly "org.projectlombok:lombok:$lombokVersion"
-    testCompileOnly "org.projectlombok:lombok:$lombokVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
-    testAnnotationProcessor "org.projectlombok:lombok:$lombokVersion"
-
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 }
 
 publishing {
