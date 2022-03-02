@@ -19,15 +19,18 @@
 
 package com.husbylabs.warptables;
 
+import com.google.common.collect.Lists;
+import com.husbylabs.warptables.events.EventListener;
+import com.husbylabs.warptables.events.state.StatusChangedEvent;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * @author Noah Husby
@@ -39,8 +42,7 @@ public abstract class WarpTableInstance {
 
     protected final Map<Integer, String> fields = new ConcurrentHashMap<>();
     protected final Map<String, Table> tables = new ConcurrentHashMap<>();
-
-    protected ScheduledExecutorService executor;
+    protected final List<EventListener> eventListeners = Lists.newArrayList();
 
     @Getter
     protected Status status = Status.STOPPED;
@@ -113,19 +115,14 @@ public abstract class WarpTableInstance {
      * If the client has enableAutoConnect() called, then the client will continuously attempt to connect
      * to the server in the background.
      *
-     * @throws Exception if the server / client cannot start.
+     * @throws IOException if the server / client cannot start.
      */
-    public void start() throws Exception {
-        executor = Executors.newScheduledThreadPool(4);
-    }
+    public abstract void start() throws IOException;
 
     /**
      * Stop the server / client
      */
-    public void stop() {
-        executor.shutdown();
-        executor = null;
-    }
+    public abstract void stop();
 
     /**
      * Gets a table by its name. A new table will be created with that name if it doesn't exist.
@@ -141,7 +138,16 @@ public abstract class WarpTableInstance {
 
     protected void setStatus(Status status) {
         this.status = status;
-        System.out.println(status.name());
+        eventListeners.forEach(l -> l.onStatusChangedEvent(new StatusChangedEvent(this, status)));
+    }
+
+    /**
+     * Add {@link EventListener} to instance
+     *
+     * @param listener {@link EventListener}
+     */
+    public void addEventListener(EventListener listener) {
+        this.eventListeners.add(listener);
     }
 
     public abstract Field getField(String path);

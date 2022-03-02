@@ -17,12 +17,19 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE
  */
 
-package com.husbylabs.warptables;
+package com.husbylabs.warptables.events;
+
+import com.husbylabs.warptables.WarpTableInstance;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 /**
- * Abstract class for handling events
- *
  * @author Noah Husby
  */
-public abstract class EventHandler {
+@RequiredArgsConstructor
+public class Event {
+    @NonNull
+    @Getter
+    protected final WarpTableInstance instance;
 }

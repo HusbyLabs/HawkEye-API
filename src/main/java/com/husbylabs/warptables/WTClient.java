@@ -33,12 +33,11 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.CallStreamObserver;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 /**
  * The WarpTables client for writing and reading data
@@ -47,33 +46,29 @@ import java.util.function.Consumer;
  */
 public class WTClient extends WarpTableInstance {
 
-    private final ManagedChannel channel;
+    private ManagedChannel channel;
 
     private int clientId = -1;
 
     private HandshakeGrpc.HandshakeBlockingStub handshakeStub;
     private FieldGrpc.FieldBlockingStub fieldStub;
 
-    private final List<Consumer<ConnectivityState>> connectivityStateEvents = new ArrayList<>();
-
     protected WTClient(InetSocketAddress address) {
         super(address);
-        channel = ManagedChannelBuilder.forAddress(address.getHostName(), address.getPort())
-                .usePlaintext()
-                .build();
     }
 
     /**
      * Start the WarpTable connection
      */
     @Override
-    public void start() throws Exception {
+    public void start() throws IOException {
         if (status != Status.STOPPED) {
-            //TODO: Throw some error
+            throw new IllegalStateException("The client is already started! Run .stop() before trying to start again.");
         }
-        super.start();
+        channel = ManagedChannelBuilder.forAddress(address.getHostName(), address.getPort())
+                .usePlaintext()
+                .build();
         setStatus(Status.STARTED);
-
         Thread connectionThread = new Thread(() -> {
             long lastAttempt = 0;
             while (status != Status.STOPPED) {
@@ -113,14 +108,16 @@ public class WTClient extends WarpTableInstance {
             fieldStub = FieldGrpc.newBlockingStub(channel);
             handleClientConnection();
             setStatus(Status.CONNECTED);
-            new Thread(this::registerStreamers).start();
+            FieldGrpc.newStub(channel).subscribe(
+                    SubscribeFieldRequest.newBuilder().setClientId(clientId).build(),
+                    new FieldUpdateCallback()
+            );
         }
     }
 
     private void handleClientConnection() {
         channel.notifyWhenStateChanged(channel.getState(false), () -> {
             ConnectivityState state = channel.getState(false);
-            connectivityStateEvents.forEach(connectivityStateConsumer -> connectivityStateConsumer.accept(state));
             if (state != ConnectivityState.READY && status == Status.CONNECTED) {
                 setStatus(Status.AWAITING_CONNECTION);
             }
@@ -148,19 +145,18 @@ public class WTClient extends WarpTableInstance {
         }
     }
 
-    public void onConnectivityStateChange(Consumer<ConnectivityState> state) {
-        connectivityStateEvents.add(state);
-    }
-
     @Override
     public void stop() {
         WarpTablesAPI.getLogger().info("Stopping WarpTable client");
         status = Status.STOPPED;
-        super.stop();
+        channel.shutdown();
     }
 
     @Override
     public Field getField(String path) {
+        if (status != Status.CONNECTED) {
+            return null;
+        }
         path = normalizePath(path, false);
         String leadingPath = "/" + path;
         String base = basePath(leadingPath);
@@ -194,6 +190,9 @@ public class WTClient extends WarpTableInstance {
 
     @Override
     public void postField(Field field) {
+        if (status != Status.CONNECTED) {
+            return;
+        }
         new Thread(() -> {
             ArrayList<String> values = new ArrayList<>();
             if (field.getType().name().contains("ARRAY")) {

@@ -63,10 +63,16 @@ public class WTServer extends WarpTableInstance {
 
 
     @Override
-    public void start() throws IOException, InterruptedException {
-        WarpTablesAPI.getLogger().info("Starting WarpTable server");
+    public void start() throws IOException {
+        if (status == Status.STARTED) {
+            throw new IllegalStateException("The server is already started. Run .stop() before trying to start again.");
+        }
         server.start();
-        server.awaitTermination();
+        try {
+            server.awaitTermination();
+        } catch (InterruptedException e) {
+            e.printStackTrace(System.err);
+        }
     }
 
     @Override
