@@ -147,7 +147,6 @@ public class WTClient extends WarpTableInstance {
 
     @Override
     public void stop() {
-        WarpTablesAPI.getLogger().info("Stopping WarpTable client");
         status = Status.STOPPED;
         channel.shutdown();
     }

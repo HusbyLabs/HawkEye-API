@@ -19,14 +19,9 @@
 
 package com.husbylabs.warptables;
 
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.UtilityClass;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.simple.SimpleLogger;
-import org.apache.logging.log4j.util.PropertiesUtil;
 
 import java.net.InetSocketAddress;
 
@@ -37,10 +32,6 @@ import java.net.InetSocketAddress;
  */
 @UtilityClass
 public class WarpTablesAPI {
-    @Getter
-    @Setter
-    private static Logger logger = new SimpleLogger("[WarpTables]", Level.INFO, true, false, true, false, "[yyyy/MM/dd HH:mm:ss]", null, PropertiesUtil.getProperties(), System.out);
-
     /**
      * Creates a new WarpTable client
      *

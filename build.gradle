@@ -32,7 +32,6 @@ repositories {
 
 dependencies {
 
-    implementation "org.apache.logging.log4j:log4j-core:$log4jVersion"
     api "io.netty:netty-buffer:$nettyVersion"
     api "com.google.protobuf:protobuf-java:$protobufVersion"
     api "io.grpc:grpc-netty-shaded:$grpcVersion"
