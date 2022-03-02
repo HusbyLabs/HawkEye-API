@@ -32,11 +32,11 @@ repositories {
 
 dependencies {
 
-    api "io.netty:netty-buffer:$nettyVersion"
-    api "com.google.protobuf:protobuf-java:$protobufVersion"
-    api "io.grpc:grpc-netty-shaded:$grpcVersion"
+    implementation "io.netty:netty-buffer:$nettyVersion"
+    implementation "com.google.protobuf:protobuf-java:$protobufVersion"
+    implementation "io.grpc:grpc-netty-shaded:$grpcVersion"
     api "io.grpc:grpc-protobuf:$grpcVersion"
-    api "io.grpc:grpc-stub:$grpcVersion"
+    implementation "io.grpc:grpc-stub:$grpcVersion"
     api "javax.annotation:javax.annotation-api:$javaxVersion"
 
     compileOnly "org.projectlombok:lombok:$lombokVersion"
