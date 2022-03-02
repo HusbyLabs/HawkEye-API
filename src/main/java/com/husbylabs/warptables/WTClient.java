@@ -32,9 +32,7 @@ import io.grpc.ConnectivityState;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.CallStreamObserver;
-import lombok.Getter;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,11 +48,6 @@ import java.util.function.Consumer;
 public class WTClient extends WarpTableInstance {
 
     private final ManagedChannel channel;
-    @Getter
-    private boolean connected = false;
-    private boolean autoConnect = false;
-    private boolean started = false;
-    private Thread autoConnectThread;
 
     private int clientId = -1;
 
@@ -74,39 +67,35 @@ public class WTClient extends WarpTableInstance {
      * Start the WarpTable connection
      */
     @Override
-    public void start() throws IOException, InterruptedException {
-        long timeout = System.currentTimeMillis() + 5000;
-        started = true;
-        // Attempt 5000ms blocking connection
-        while (timeout > System.currentTimeMillis() && !connected) {
-            if (channel.getState(true) == ConnectivityState.READY) {
-                attemptHandshake();
-            }
+    public void start() throws Exception {
+        if (status != Status.STOPPED) {
+            //TODO: Throw some error
         }
-        if (connected) {
-            return;
-        }
+        super.start();
+        setStatus(Status.STARTED);
 
-        // Error handling depending on autoConnect option
-        if (autoConnect) {
-            handleAutoConnect();
-        } else {
-            throw new IOException("The WarpTables server is not accessible.");
-        }
-    }
-
-    private void handleAutoConnect() {
-        if (autoConnectThread != null && autoConnectThread.isAlive()) {
-            return;
-        }
-        autoConnectThread = new Thread(() -> {
-            while (!connected) {
-                if (channel.getState(true) == ConnectivityState.READY) {
-                    attemptHandshake();
+        Thread connectionThread = new Thread(() -> {
+            long lastAttempt = 0;
+            while (status != Status.STOPPED) {
+                if (status == Status.STARTED) {
+                    setStatus(Status.AWAITING_CONNECTION);
+                } else if (status == Status.AWAITING_CONNECTION && lastAttempt + 5000 < System.currentTimeMillis()) {
+                    setStatus(Status.CONNECTING);
+                    long timeout = System.currentTimeMillis() + 2000;
+                    while (timeout > System.currentTimeMillis() && status != Status.CONNECTED) {
+                        if (channel.getState(true) == ConnectivityState.READY) {
+                            attemptHandshake();
+                        }
+                    }
+                    if (status != Status.CONNECTED) {
+                        lastAttempt = System.currentTimeMillis();
+                        setStatus(Status.AWAITING_CONNECTION);
+                    }
                 }
             }
         });
-        autoConnectThread.start();
+        connectionThread.setDaemon(true);
+        connectionThread.start();
     }
 
     /**
@@ -123,7 +112,7 @@ public class WTClient extends WarpTableInstance {
             System.out.println("Connected w/ Client Id: " + clientId);
             fieldStub = FieldGrpc.newBlockingStub(channel);
             handleClientConnection();
-            connected = true;
+            setStatus(Status.CONNECTED);
             new Thread(this::registerStreamers).start();
         }
     }
@@ -132,36 +121,22 @@ public class WTClient extends WarpTableInstance {
         channel.notifyWhenStateChanged(channel.getState(false), () -> {
             ConnectivityState state = channel.getState(false);
             connectivityStateEvents.forEach(connectivityStateConsumer -> connectivityStateConsumer.accept(state));
-            if (state != ConnectivityState.READY && connected) {
-                connected = false;
-                if (autoConnect && started) {
-                    handleAutoConnect();
-                }
+            if (state != ConnectivityState.READY && status == Status.CONNECTED) {
+                setStatus(Status.AWAITING_CONNECTION);
             }
             handleClientConnection();
         });
     }
 
     /**
-     * Enable the auto connect feature.
-     * The auto connect feature will attempt to keep the client and server connected as long as {@link #stop()} hasn't been called.
-     */
-    public void enableAutoConnect() {
-        autoConnect = true;
-    }
-
-    /**
-     * Disable the auto connect feature.
-     */
-    public void disableAutoConnect() {
-        autoConnect = false;
-    }
-
-    /**
      * Blocks current thread until the client is connected
      */
     public void awaitConnection() {
-        while (!connected) {
+        while (status != Status.CONNECTED) {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException ignored) {
+            }
         }
     }
 
@@ -180,9 +155,8 @@ public class WTClient extends WarpTableInstance {
     @Override
     public void stop() {
         WarpTablesAPI.getLogger().info("Stopping WarpTable client");
-        autoConnectThread.interrupt();
-        autoConnectThread = null;
-        started = false;
+        status = Status.STOPPED;
+        super.stop();
     }
 
     @Override

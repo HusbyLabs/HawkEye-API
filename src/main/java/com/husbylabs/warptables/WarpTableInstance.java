@@ -26,6 +26,8 @@ import lombok.RequiredArgsConstructor;
 import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * @author Noah Husby
@@ -37,6 +39,11 @@ public abstract class WarpTableInstance {
 
     protected final Map<Integer, String> fields = new ConcurrentHashMap<>();
     protected final Map<String, Table> tables = new ConcurrentHashMap<>();
+
+    protected ScheduledExecutorService executor;
+
+    @Getter
+    protected Status status = Status.STOPPED;
 
     private double periodicRate = 0.01;
     private boolean overridePeriodicData = false;
@@ -108,12 +115,17 @@ public abstract class WarpTableInstance {
      *
      * @throws Exception if the server / client cannot start.
      */
-    public abstract void start() throws Exception;
+    public void start() throws Exception {
+        executor = Executors.newScheduledThreadPool(4);
+    }
 
     /**
      * Stop the server / client
      */
-    public abstract void stop();
+    public void stop() {
+        executor.shutdown();
+        executor = null;
+    }
 
     /**
      * Gets a table by its name. A new table will be created with that name if it doesn't exist.
@@ -125,6 +137,11 @@ public abstract class WarpTableInstance {
         path = normalizePath(path);
         tables.putIfAbsent(path, new Table(this, path));
         return tables.get(path);
+    }
+
+    protected void setStatus(Status status) {
+        this.status = status;
+        System.out.println(status.name());
     }
 
     public abstract Field getField(String path);
