@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option java_package = "com.husbylabs.warptables.packets";
+option java_multiple_files = true;
+
+service Logger {
+    rpc Post(LogPost) returns (google.protobuf.Empty);
+    rpc Subscribe(SubscribeLogEvent) returns (stream LogPost);
+}
+
+message LogPost {
+    enum Level {
+        DEBUG = 0;
+        INFO = 1;
+        WARN = 2;
+        ERROR = 3;
+        FATAL = 4;
+    }
+    Level level = 1;
+    string message = 2;
+}
+
+message SubscribeLogEvent {
+    int32 clientId = 1;
+}
