@@ -20,7 +20,6 @@
 package com.husbylabs.warptables;
 
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.experimental.UtilityClass;
 
 import java.net.InetSocketAddress;

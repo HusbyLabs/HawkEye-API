@@ -73,7 +73,7 @@ public class Field {
         }
         this.type = type;
         this.value = value;
-        table.getInstance().postField(this);
+        table.getInstance().publishField(this);
         return value;
     }
 

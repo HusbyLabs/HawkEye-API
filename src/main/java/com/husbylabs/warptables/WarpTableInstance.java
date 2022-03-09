@@ -20,6 +20,7 @@
 package com.husbylabs.warptables;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.husbylabs.warptables.events.EventListener;
 import com.husbylabs.warptables.events.state.StatusChangedEvent;
 import lombok.AccessLevel;
@@ -28,9 +29,12 @@ import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author Noah Husby
@@ -43,12 +47,17 @@ public abstract class WarpTableInstance {
     protected final Map<Integer, String> fields = new ConcurrentHashMap<>();
     protected final Map<String, Table> tables = new ConcurrentHashMap<>();
     protected final List<EventListener> eventListeners = Lists.newArrayList();
+    protected final ConcurrentHashMap<String, Field> fieldsToPublish = new ConcurrentHashMap<>();
+
+    private Thread publishThread = null;
 
     @Getter
     protected Status status = Status.STOPPED;
 
-    private double periodicRate = 0.01;
-    private boolean overridePeriodicData = false;
+    private final ExecutorService publishThreads = Executors.newFixedThreadPool(16);
+
+    private double periodicRate = 10;
+    private long lastPublish = System.currentTimeMillis();
 
     /**
      * Normalizes a child path. Examples
@@ -71,19 +80,13 @@ public abstract class WarpTableInstance {
     /**
      * Set the periodic rate of the instance. This is how frequent the data should be sent.
      *
-     * @param interval The interval rate in seconds. Range: 00.1 - 1.0
+     * @param interval The interval rate in seconds. Range: 0.01 - 1.0
      */
     public void setUpdateRate(double interval) {
-        this.periodicRate = interval;
-    }
-
-    /**
-     * Sets whether repeated entries should be overridden on each periodic loop
-     *
-     * @param override True to override, false to not
-     */
-    public void setOverridePeriodicData(boolean override) {
-        this.overridePeriodicData = override;
+        if (interval < 0.01 || interval > 1.0) {
+            throw new IllegalArgumentException("The interval must be between 0.01 - 1.0");
+        }
+        this.periodicRate = interval * 1000;
     }
 
     /**
@@ -141,6 +144,29 @@ public abstract class WarpTableInstance {
         eventListeners.forEach(l -> l.onStatusChangedEvent(new StatusChangedEvent(this, status)));
     }
 
+    protected void startPublishThread() {
+        if (publishThread != null && publishThread.isAlive()) {
+            publishThread.interrupt();
+        }
+        publishThread = new Thread(() -> {
+            while (status != Status.STOPPED) {
+                if (lastPublish + periodicRate < System.currentTimeMillis()) {
+                    lastPublish = System.currentTimeMillis();
+                    HashMap<String, Field> temp;
+                    synchronized (fieldsToPublish) {
+                        temp = Maps.newHashMap(fieldsToPublish);
+                        fieldsToPublish.clear();
+                    }
+                    for (Field field : temp.values()) {
+                        publishThreads.submit(() -> publishQueuedField(field));
+                    }
+                }
+            }
+        });
+        publishThread.setDaemon(true);
+        publishThread.start();
+    }
+
     /**
      * Add {@link EventListener} to instance
      *
@@ -152,5 +178,9 @@ public abstract class WarpTableInstance {
 
     public abstract Field getField(String path);
 
-    public abstract void postField(Field field);
+    public void publishField(Field field) {
+        fieldsToPublish.putIfAbsent(field.getPath(), field);
+    }
+
+    protected abstract void publishQueuedField(Field field);
 }

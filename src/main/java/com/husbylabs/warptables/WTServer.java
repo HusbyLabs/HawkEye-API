@@ -67,6 +67,8 @@ public class WTServer extends WarpTableInstance {
         if (status == Status.STARTED) {
             throw new IllegalStateException("The server is already started. Run .stop() before trying to start again.");
         }
+        status = Status.STARTED;
+        startPublishThread();
         server.start();
         try {
             server.awaitTermination();
@@ -83,6 +85,7 @@ public class WTServer extends WarpTableInstance {
             } catch (InterruptedException e) {
                 e.printStackTrace(System.err);
             }
+            status = Status.STOPPED;
         }
     }
 
@@ -144,11 +147,8 @@ public class WTServer extends WarpTableInstance {
     }
 
     @Override
-    public void postField(Field field) {
-        postField(field, -1);
-    }
-
-    private void postField(Field field, int clientId) {
+    protected void publishQueuedField(Field field) {
+        // TODO: IMPORTANT. ADD FIELD OWNERSHIP
         ArrayList<String> values = new ArrayList<>();
         if (field.getType().name().contains("ARRAY")) {
             Object[] arr = (Object[]) field.getValue();
@@ -161,10 +161,7 @@ public class WTServer extends WarpTableInstance {
                 .setType(field.getType());
         values.forEach(builder::addValue);
         FieldUpdate payload = builder.build();
-        fieldStreamObservers.entrySet()
-                .stream()
-                .filter(e -> e.getKey() != clientId)
-                .forEach(e -> e.getValue().onNext(payload));
+        fieldStreamObservers.forEach((key, value) -> value.onNext(payload));
     }
 
     /*
@@ -221,7 +218,8 @@ public class WTServer extends WarpTableInstance {
                 field.setValue(update.getType(), values);
                 responseObserver.onNext(Constants.EMPTY);
                 responseObserver.onCompleted();
-                postField(field, request.getClientId());
+                // TODO: IMPORTANT. ADD FIELD OWNERSHIP
+                publishQueuedField(field);
             }
         }
 
