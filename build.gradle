@@ -16,7 +16,7 @@ ext {
     semVersion = "0.0.1"
     fullVersion = semVersion + "+" + ('git rev-list --count HEAD'.execute().text.trim())
     nettyVersion = "4.1.78.Final"
-    lombokVersion = "1.18.24"
+    lombokVersion = "1.18.26"
     protobufVersion = "3.21.2"
     log4jVersion = "2.17.2"
     grpcVersion = "1.47.0"
